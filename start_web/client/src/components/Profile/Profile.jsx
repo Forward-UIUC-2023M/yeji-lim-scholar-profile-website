@@ -98,18 +98,20 @@ function Profile() {
     return (
       <div>
         <div className="container-profile">
-          <div className="container-img">
-            <img
-              src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-              alt="profile.jpg"
-            />
-          </div>
+          <img
+            className="container-img"
+            src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+            alt="profile.jpg"
+          />
+
           <div className="container-detail-1">
             <h1 className="profile-name">{primaryName}</h1>
             <h4>{email}</h4>
             <h4>{phone}</h4>
           </div>
-          <hr width="1" size="300" />
+
+          <div class="container-vertical-line"></div>
+          
           <div className="container-detail-2">
             <h3>{institution}</h3>
             <h3>Title</h3>
@@ -135,73 +137,75 @@ function Profile() {
             </ul>
           </div>
         </div>
-        <div className="container-professional-detail">
-          <div className="educations">
-            <h1>Education</h1>
-            <ul>
-              {education?.map((edu, index) => {
-                return (
-                  <li className="education" key={index}>
-                    {edu}
-                  </li>
-                );
-              })}
-            </ul>
+
+        <div className="d-flex">
+          <div className="container-professional-detail">
+            <div className="educations">
+              <h1>Education</h1>
+              <ul>
+                {education?.map((edu, index) => {
+                  return (
+                    <li className="education" key={index}>
+                      {edu}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+            <div className="honors">
+              <h1>Honors</h1>
+              <ul>
+                {honors?.map((hon, index) => {
+                  return (
+                    <li className="honor" key={index}>
+                      {hon}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+
+            <div className="experiences">
+              <h1>Experience</h1>
+              <ul>
+                {experiences?.map((exp, index) => {
+                  return (
+                    <li className="experience" key={index}>
+                      {exp}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+
+            <div className="keywords">
+              <h1>Key Words</h1>
+              <ul>
+                {keywords?.map((keyw, index) => {
+                  return (
+                    <li className="keyword" key={index}>
+                      {keyw}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
           </div>
-          <div className="honors">
-            <h1>Honors</h1>
-            <ul>
-              {honors?.map((hon, index) => {
+
+          <div className="container-papers">
+            <h1>Published Papers</h1>
+            <ul className="published-papers">
+              {papers?.map((pap, index) => {
                 return (
-                  <li className="honor" key={index}>
-                    {hon}
+                  <li className="published-paper" key={index}>
+                    {pap}
                   </li>
                 );
               })}
-            </ul>
-          </div>
-          <div className="experiences">
-            <h1>Experience</h1>
-            <ul>
-              {experiences?.map((exp, index) => {
-                return (
-                  <li className="experience" key={index}>
-                    {exp}
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-          <div className="keywords">
-            <h1>Key Words</h1>
-            <ul>
-              {keywords?.map((keyw, index) => {
-                return (
-                  <li className="keyword" key={index}>
-                    {keyw}
-                  </li>
-                );
-              })}
-              {/* <li className="keyword"> */}
-              {/* Ph.D. Electrial Engineering, Stanford University, 2001 */}
-              {/* {keywords} */}
-              {/* </li> */}
             </ul>
           </div>
         </div>
-        <div className="container-papers">
-          <h1>Published Papers</h1>
-          <ul className="published-papers">
-            {papers?.map((pap, index) => {
-              return (
-                <li className="published-paper" key={index}>
-                  {pap}
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      </div>
+      </div >
     );
   } else {
     return (
