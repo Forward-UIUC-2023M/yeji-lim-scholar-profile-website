@@ -52,7 +52,7 @@ input[type="file"] {
   width: 40%;
 }
 
-p {
+.profile-form-input {
   color: #625155;
   margin-bottom: 10px;
 }

@@ -50,13 +50,13 @@ function Form() {
   //     setToggle(true);
   //   };
 
-  const inputArr = [
-    {
-      type: "text",
-      id: 1,
-      value: "",
-    },
-  ];
+//   const inputArr = [
+//     {
+//       type: "text",
+//       id: 1,
+//       value: "",
+//     },
+//   ];
 
   //   const [arr, setArr] = useState(inputArr);
 
@@ -72,6 +72,7 @@ function Form() {
     const list = [...altNameList];
     list.splice(index, 1);
     setAltNameList(list);
+
   };
 
   const removeLinkInput = (index) => {
@@ -90,7 +91,8 @@ function Form() {
 
     //   return newArr;
     // });
-
+    console.log(e.target.id);
+    console.log( e.target);
     setFormData((prevState) => ({
       ...prevState,
       [e.target.id]: e.target.value,
@@ -151,7 +153,7 @@ function Form() {
           enctype="multipart/form-data"
           onSubmit={submit}
         >
-          <p className="profile-form-primary-name">Primary Name</p>
+          <p className="profile-form-input">Primary Name</p>
           <input
             type="text"
             className="formPrimaryName"
@@ -160,7 +162,7 @@ function Form() {
             id="primaryName"
             onChange={onChange}
           />
-          <p className="profile-form-secondary-name">Alternative Names</p>
+          <p className="profile-form-input">Alternative Names</p>
           {altNameList.map((singleAltName, index) => {
             return (
               <>
@@ -177,6 +179,7 @@ function Form() {
                     <button
                       className="remove-input"
                       type="button"
+                      key={index}
                       onClick={() => removeAltNameInput(index)}
                     >
                       Remove
@@ -228,7 +231,7 @@ function Form() {
             })}
           </div> */}
 
-          <p className="profile-form-link">Link</p>
+          <p className="profile-form-input">Link</p>
           {linkList.map((singleLink, index) => {
             return (
               <>
@@ -245,6 +248,7 @@ function Form() {
                     <button
                       className="remove-input"
                       type="button"
+                      key={index}
                       onClick={() => removeLinkInput(index)}
                     >
                       Remove
@@ -268,7 +272,7 @@ function Form() {
             onChange={onChange}
           />
           <button className="more-input">+</button> */}
-          <p className="profile-form-other-info">Other Information</p>
+          <p className="profile-form-input">Other Information</p>
           <textarea
             type="text"
             className="formOther"
@@ -302,7 +306,7 @@ function Form() {
             placeholder="Keywords for your studies"
             onChange={onChange}
           /> */}
-          <p> Resume/CV </p>
+          <p className="profile-form-input"> Resume/CV </p>
           <input
             type="file"
             name="form-resume"
@@ -310,7 +314,7 @@ function Form() {
             id="resume"
             // onChange={handleFileChange}
           />
-          <p> Profile Picture </p>
+          <p className="profile-form-input"> Profile Picture </p>
           <input
             type="file"
             name="profilePhoto"
