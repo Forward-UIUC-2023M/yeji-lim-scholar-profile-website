@@ -57,37 +57,41 @@ function Login() {
   return (
     <>
       {/* {localStorage.getItem("token") != null && <Navigate to="/Profile" />} */}
-      <div className="register-container">
-        <h1>Login</h1>
-        <div className="container-register-form">
+      <div className="login-container">
+        <h1 className="login-heading">Login</h1>
+        <div className="container-login-form">
           <form
             action=""
-            className="register-form"
+            className="login-form"
             onSubmit={submit}
             autoComplete="off"
           >
             <br></br>
-            <h5 className="register-input"> Email </h5>
-            <input
-              type="email"
-              className="emailInput"
-              placeholder="Email"
-              id="email"
-              value={email}
-              onChange={onChange}
-            />
-            <h5 className="register-input"> Password </h5>
-            <input
-              type="password"
-              className="passwordInput"
-              placeholder="Password"
-              id="password"
-              value={password}
-              onChange={onChange}
-            />
+            <div>
+              {/* <h5 className="login-input"> Email </h5> */}
+              <input
+                type="email"
+                className="emailInput"
+                placeholder="Email"
+                id="email"
+                value={email}
+                onChange={onChange}
+              />
+            </div>
+            {/* <h5 className="login-input"> Password </h5> */}
+            <div>
+              <input
+                type="password"
+                className="passwordInput"
+                placeholder="Password"
+                id="password"
+                value={password}
+                onChange={onChange}
+              />
+            </div>
             <div>
               <button
-                className="register-button"
+                className="login-button"
                 type="submit"
                 version="secondary"
               >
@@ -103,10 +107,19 @@ function Login() {
             </span>
           </form>
         </div>
-        <div className="navbar">
-          <Link to="/register" className="register-link">
-            <p className="PageHeader">New Member? Register Here</p>
-          </Link>
+        <div className="login-footer">
+          <div className="login-footer-password">
+            <span className="login-footer-span">Forgot your password?</span>
+            <Link to="/register" className="login-link">
+              <button className="login-new-pass-btn">Reset Password</button>
+            </Link>
+          </div>
+          <div className="login-footer-login">
+            <span className="login-footer-span">Don't have an account?</span>
+            <Link to="/register" className="login-link">
+              <button className="login-new-account-btn">Create Account</button>
+            </Link>
+          </div>
         </div>
       </div>
     </>

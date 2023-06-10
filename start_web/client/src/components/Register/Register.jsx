@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Register.css";
 import axios from "axios";
 
@@ -83,17 +83,17 @@ function Register() {
   return (
     <>
       {/* {localStorage.getItem("token") != null && <Navigate to="/Profile" />} */}
-      <div className="login-container">
-        <h1>Register</h1>
-        <div className="container-login-form">
+      <div className="register-container">
+        <h1>Create Account</h1>
+        <div className="container-register-form">
           <form
             action=""
-            className="login-form"
+            className="register-form"
             onSubmit={submit}
             autoComplete="off"
           >
             <br></br>
-            <h5 className="login-input"> Name </h5>
+            {/* <h5 className="register-input"> Name </h5> */}
             <input
               type="text"
               className="register-name"
@@ -102,7 +102,7 @@ function Register() {
               value={name}
               onChange={onChange}
             />
-            <h5 className="login-input"> Email </h5>
+            {/* <h5 className="register-input"> Email </h5> */}
             <input
               type="email"
               className="register-email"
@@ -121,7 +121,7 @@ function Register() {
                 {emailError}
               </div>
             </div>
-            <h5 className="login-input"> Password </h5>
+            {/* <h5 className="register-input"> Password </h5> */}
             <input
               type="password"
               className="register-password"
@@ -140,7 +140,7 @@ function Register() {
                 {passwordError}
               </div>
             </div>
-            {/* <h5 className="login-input"> Password </h5>
+            {/* <h5 className="register-input"> Password </h5>
             <input
               type="password"
               className="register-password"
@@ -160,8 +160,8 @@ function Register() {
             </div>
           </form>
         </div>
-        <div className="navbar">
-          <Link to="/login" className="register-link">
+        <div className="register-footer">
+          <Link to="/register" className="register-link">
             <p className="PageHeader">Already a Member? Log in Here</p>
           </Link>
         </div>

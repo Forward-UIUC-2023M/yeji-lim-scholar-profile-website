@@ -2,11 +2,13 @@
 
 .NavbarItems {
   /* background: linear-gradient(90deg, rgb(56,191,196) 0%, rgba(73, 63, 252, 1) 100%); */
-  background: rgb(190, 178, 167);
+  /* background: rgb(190, 178, 167); */
+  background-color: #395ef4;
   height: 80px;
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
   font-size: 1.2rem;
 }
 
@@ -43,8 +45,9 @@
 }
 
 .nav-links:hover {
-  background-color: rgb(182, 159, 144);
-  /* color: #fff; */
+  /* background-color: rgb(182, 159, 144); */
+  background-color: #fff;
+  color: #395ef4;
   border-radius: 4px;
   transition: all 0.2s ease-out;
 }
