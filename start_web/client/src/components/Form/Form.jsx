@@ -4,18 +4,21 @@ import Input from "./Input/Input";
 import "./Form.css";
 import axios from "axios";
 import { Navigate, useNavigate } from "react-router-dom";
+import * as MdIcons from "react-icons/md";
+import { FaListOl } from "react-icons/fa";
 
 function Form() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     primaryName: "",
-    alternativeName: "",
+    alternativeName: [],
     link: "",
     keywords: "",
   });
 
-  const { primaryName, alternativeName, link, keywords } = formData;
-  //   const [formData, setFormData] = useState([]);
+  const { primaryName, alternativeName, link, resume, photo } = formData;
+  const [linkList, setLinkList] = useState([{ link: "" }]);
+  const [altNameList, setAltNameList] = useState([{ alternativeName: "" }]);
   //   const [toggle, setToggle] = useState(false);
 
   //   const inputRef = useRef();
@@ -55,18 +58,26 @@ function Form() {
     },
   ];
 
-  const [arr, setArr] = useState(inputArr);
+  //   const [arr, setArr] = useState(inputArr);
 
-  const addInput = () => {
-    setArr((s) => {
-      return [
-        ...s,
-        {
-          type: "text",
-          value: "",
-        },
-      ];
-    });
+  const addAltNameInput = () => {
+    setAltNameList([...altNameList, { alternativeName: "" }]);
+  };
+
+  const addLinkInput = () => {
+    setLinkList([...linkList, { link: "" }]);
+  };
+
+  const removeAltNameInput = (index) => {
+    const list = [...altNameList];
+    list.splice(index, 1);
+    setAltNameList(list);
+  };
+
+  const removeLinkInput = (index) => {
+    const list = [...linkList];
+    list.splice(index, 1);
+    setLinkList(list);
   };
 
   const onChange = (e) => {
@@ -98,8 +109,11 @@ function Form() {
     });
     var data = JSON.stringify({
       primaryName: primaryName,
-      alternativeName: alternativeName,
+        alternativeName: alternativeName,
+    //   alternativeName: altNameList,
       link: link,
+      resume: resume,
+      photo: photo
       //   keywords: keywords,
     });
     var config = {
@@ -147,13 +161,57 @@ function Form() {
             onChange={onChange}
           />
           <p className="profile-form-secondary-name">Alternative Names</p>
-          <input
+          {altNameList.map((singleAltName, index) => {
+            return (
+              <>
+                <div className="altNameInputs">
+                  <input
+                    type="text"
+                    className="formAlternativeName"
+                    id="alternativeName"
+                    placeholder="Alternative name"
+                    onChange={onChange}
+                    key={index}
+                  />
+                  {altNameList.length > 1 && (
+                    <button
+                      className="remove-input"
+                      type="button"
+                      onClick={() => removeAltNameInput(index)}
+                    >
+                      Remove
+                    </button>
+                  )}
+                </div>
+                {/* <button className="more-input" onClick={addInput}>+</button> */}
+              </>
+            );
+          })}
+          <div className="add-buttons">
+            <button
+              className="more-input"
+              type="button"
+              onClick={addAltNameInput}
+            >
+              Add
+            </button>
+          </div>
+          {/* <div className="add-buttons">
+            <MdIcons.MdOutlineAddCircleOutline
+              className="more-input"
+              onClick={addAltNameInput}
+            />
+          </div> */}
+          {/* <input
             type="text"
             className="formAlternativeName"
             placeholder="Alternative name"
             id="alternativeName"
             onChange={onChange}
           />
+          <button className="more-input" onClick={addInput}>
+            +
+          </button> */}
 
           {/* <div>
             <button onClick={addInput}>+</button>
@@ -171,11 +229,51 @@ function Form() {
           </div> */}
 
           <p className="profile-form-link">Link</p>
-          <input
+          {linkList.map((singleLink, index) => {
+            return (
+              <>
+                <div className="linkInputs">
+                  <input
+                    type="text"
+                    className="formLink"
+                    id="link"
+                    placeholder="Link to preferred website with information"
+                    onChange={onChange}
+                    key={index}
+                  />
+                  {linkList.length > 1 && (
+                    <button
+                      className="remove-input"
+                      type="button"
+                      onClick={() => removeLinkInput(index)}
+                    >
+                      Remove
+                    </button>
+                  )}
+                </div>
+                {/* <button className="more-input" onClick={addInput}>+</button> */}
+              </>
+            );
+          })}
+          <div className="add-buttons">
+            <button className="more-input" type="button" onClick={addLinkInput}>
+              Add
+            </button>
+          </div>
+          {/* <input
             type="text"
             className="formLink"
             id="link"
-            placeholder="Link to preferred website with info"
+            placeholder="Link to preferred website with information"
+            onChange={onChange}
+          />
+          <button className="more-input">+</button> */}
+          <p className="profile-form-other-info">Other Information</p>
+          <textarea
+            type="text"
+            className="formOther"
+            id="other"
+            placeholder="Other miscellaneous information"
             onChange={onChange}
           />
           {/* <p className="profile-form-link">Links</p>
@@ -196,19 +294,27 @@ function Form() {
               index={index}
             />
           ))} */}
-          <p className="profile-form-keywords">Key Words</p>
+          {/* <p className="profile-form-keywords">Key Words</p>
           <input
             type="text"
             className="formKeywords"
             id="keywords"
             placeholder="Keywords for your studies"
             onChange={onChange}
+          /> */}
+          <p> Resume/CV </p>
+          <input
+            type="file"
+            name="form-resume"
+            className="formResume"
+            id="resume"
+            // onChange={handleFileChange}
           />
           <p> Profile Picture </p>
           <input
             type="file"
-            name="itemImage"
-            className="CreateListingPhoto"
+            name="profilePhoto"
+            className="formProfilePhoto"
             id="photo"
             // onChange={handleFileChange}
           />

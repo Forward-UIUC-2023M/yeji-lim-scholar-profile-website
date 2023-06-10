@@ -3,7 +3,10 @@ const Profiles = require("./Profile");
 
 const ProfilesSchema = mongoose.Schema({
   primaryName: String,
-  alternativeName: String,
+  alternativeName: {
+    type: [String],
+    default: ["None"],
+  },
   link: String,
   keywords: {
     type: [String],

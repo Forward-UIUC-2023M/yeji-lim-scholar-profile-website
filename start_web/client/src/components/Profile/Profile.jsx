@@ -6,8 +6,10 @@ import "./Profile.css";
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Link, Navigate, useNavigate } from "react-router-dom";
+import * as FiIcons from "react-icons/fi";
 import { IconContext } from 'react-icons'
 import { BiEdit } from 'react-icons/bi';
+
 
 // Connect this to backend, loop through back end to get the list elements
 // Figure out how to use useEffect before rendering
@@ -47,7 +49,7 @@ function Profile() {
 
   const click = (e) => {
     navigate("/form");
-  }
+  };
 
   // setter for all fields in the user profile
   const setProfileField = (fieldName, value, index = null) => {
@@ -126,7 +128,6 @@ function Profile() {
             src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
             alt="profile.jpg"
           />
-
           <div className="container-detail-1">
             <div className="container-detail-info">
               {editModes.primaryName ? (
@@ -268,11 +269,23 @@ function Profile() {
             </div>
 
           </div>
+          <div className="edit-buttons">
+            <Link to="/">
+              <FiIcons.FiEdit className="edit-profile-button" color="#625155"/>
+            </Link>
+            {/* <button className="edit-keywords-button">edit</button> */}
+          </div>
         </div>
 
         <div className="d-flex">
           <div className="container-professional-detail">
             <div className="educations">
+            <div className="edit-buttons">
+            <Link to="/">
+              <FiIcons.FiEdit className="edit-education-button" color="#625155"/>
+            </Link>
+            {/* <button className="edit-keywords-button">edit</button> */}
+          </div>
               <h1>Education</h1>
               <ul>
                 {profile.educations?.map((education, index) => {
@@ -285,6 +298,12 @@ function Profile() {
               </ul>
             </div>
             <div className="honors">
+            <div className="edit-buttons">
+            <Link to="/">
+              <FiIcons.FiEdit className="edit-honors-button" color="#625155"/>
+            </Link>
+            {/* <button className="edit-keywords-button">edit</button> */}
+          </div>
               <h1>Honors</h1>
               <ul>
                 {profile.honors?.map((honor, index) => {
@@ -298,6 +317,12 @@ function Profile() {
             </div>
 
             <div className="experiences">
+            <div className="edit-buttons">
+            <Link to="/">
+              <FiIcons.FiEdit className="edit-experiences-button" color="#625155"/>
+            </Link>
+            {/* <button className="edit-keywords-button">edit</button> */}
+          </div>
               <h1>Experience</h1>
               <ul>
                 {profile.experiences?.map((experience, index) => {
@@ -311,6 +336,12 @@ function Profile() {
             </div>
 
             <div className="keywords">
+            <div className="edit-buttons">
+            <Link to="/">
+              <FiIcons.FiEdit className="edit-keywords-button" color="#625155"/>
+            </Link>
+            {/* <button className="edit-keywords-button">edit</button> */}
+          </div>
               <h1>Key Words</h1>
               <ul>
                 {profile.keywords?.map((keyword, index) => {
@@ -325,6 +356,12 @@ function Profile() {
           </div>
 
           <div className="container-papers">
+          <div className="edit-buttons">
+            <Link to="/">
+              <FiIcons.FiEdit className="edit-papers-button" color="#625155"/>
+            </Link>
+            {/* <button className="edit-keywords-button">edit</button> */}
+          </div>
             <h1>Published Papers</h1>
             <ul className="published-papers">
               {profile.papers?.map((paper, index) => {
@@ -337,13 +374,15 @@ function Profile() {
             </ul>
           </div>
         </div>
-      </div >
+      </div>
     );
   } else {
     return (
       <div className="no-profile-container">
         <h1>A Profile Has Not Been Made</h1>
-        <button className="go-to-form-button" onClick={click}>Make Your First Profile!</button>
+        <button className="go-to-form-button" onClick={click}>
+          Make Your First Profile!
+        </button>
       </div>
     );
   }

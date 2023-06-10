@@ -25,7 +25,7 @@ function Navbar() {
           <FaIcons.FaBars onClick={showSidebar} />
         </Link>
         <Link to="/">
-          <HiIcons.HiLightBulb className="navbar-logo" />
+          <HiIcons.HiLightBulb className="navbar-logo"/>
         </Link>
         <ul className="navbar-menu">
           {NavItems.map((item, index) => {
