@@ -67,3 +67,8 @@
 .register-error {
   margin-bottom: 35px;
 }
+
+.register-link {
+    margin: auto;
+    margin-top: 15px;
+}
