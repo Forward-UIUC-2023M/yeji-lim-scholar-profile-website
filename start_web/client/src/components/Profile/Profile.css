@@ -178,6 +178,34 @@ span {
   text-align: left;
 }
 
+input {
+  border: 0;
+  padding: 8px;
+}
+
+textarea {
+  border: 0;
+  resize: none;
+  overflow: hidden;
+  min-height: 14px;
+  max-height: 100px;
+  width: 200px;
+  color: #625155;
+  background-color: #f8f8f8;
+}
+
+.edit-button {
+  position: absolute;
+  display: none;
+  font-size: 200%;
+  color: #625155; 
+  z-index: 999;
+}
+
+.container-detail-info:hover .edit-button {
+  display: block;
+}
+
 .no-profile-container {
   width: 30%;
   height: 300px;

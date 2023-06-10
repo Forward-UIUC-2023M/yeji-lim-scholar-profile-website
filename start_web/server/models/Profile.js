@@ -35,7 +35,7 @@ const ProfilesSchema = mongoose.Schema({
     type: String,
     default: "123-456-7890",
   },
-  education: {
+  educations: {
     type: [String],
     // default: "no edu",
     default: [
@@ -47,7 +47,7 @@ const ProfilesSchema = mongoose.Schema({
     type: String,
     default: "University of Illinois at Urbana-Champaign",
   },
-  title: {
+  titles: {
     type: [String],
     default: ["Professor", "Chair of Something Organization"],
   },
@@ -55,7 +55,7 @@ const ProfilesSchema = mongoose.Schema({
     type: String,
     default: "Computer Science",
   },
-  focusArea: {
+  focusAreas: {
     type: [String],
     // default: ["None"],
     default: ["Artificial Intelligence", "Machine Learning", "Big Data"],

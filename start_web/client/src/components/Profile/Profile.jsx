@@ -1,43 +1,93 @@
 // import React from "react";
 import Navbar from "../Navbar/Navbar";
 import Sidebar from "../Sidebar/Sidebar";
+import MultilineEdit from "./MultilineEdit";
 import "./Profile.css";
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import * as FiIcons from "react-icons/fi";
+import { IconContext } from 'react-icons'
+import { BiEdit } from 'react-icons/bi';
+
 
 // Connect this to backend, loop through back end to get the list elements
 // Figure out how to use useEffect before rendering
 
 function Profile() {
-  const [profile, setProfile] = useState([]);
-  // const [profile = [], setProfile] = useState();
-  // const profile = useRef(null);
   const navigate = useNavigate();
+
+  const [profile, setProfile] = useState({
+    primaryName: '',
+    keywords: [],
+    email: '',
+    phone: '',
+    educations: [],
+    institution: '',
+    titles: [],
+    major: '',
+    focusAreas: [],
+    honors: [],
+    experiences: [],
+    papers: [],
+  });
+
+  const [editModes, setEditModes] = useState({
+    primaryName: false,
+    keywords: false,
+    email: false,
+    phone: false,
+    educations: false,
+    institution: false,
+    titles: false,
+    major: false,
+    focusAreas: false,
+    honors: false,
+    experiences: false,
+    papers: false,
+  });  // states for whether current elements, e.g. primaryName, is in edit mode
+
   const click = (e) => {
     navigate("/form");
   };
 
-  // useEffect(() => {
-  //   const fetchprofile = async () => {
-  //     const { data } = await axios.get(
-  //       "http://localhost:8000/api/profiles/647d0065250a2907b7dc6735"
-  //     );
-  //     console.log("data: ", data);
-  //     setProfile(data.data);
-  //   };
-  //   fetchprofile();
-  //   console.log(profile);
-  //   // var data = JSON.stringify({
-  //   //   name: name,
-  //   //   description: description,
-  //   //   seller: user.data.data._id,
-  //   //   cost: cost,
-  //   // });
-  // });
+  // setter for all fields in the user profile
+  const setProfileField = (fieldName, value, index = null) => {
+    setProfile((prevProfile) => {
+      if (index !== null) {
+        // Handle indexed fields
+        const updatedField = [...prevProfile[fieldName]];
+        updatedField[index] = value;
 
-  // const [id, setId] = useState();
+        return {
+          ...prevProfile,
+          [fieldName]: updatedField,
+        };
+      } else {
+        // Handle non-indexed fields
+        return {
+          ...prevProfile,
+          [fieldName]: value,
+        };
+      }
+    });
+  };
+
+  // set field in editModes to be true when the user clicks on edit buttons
+  const handleClickOnEdit = (fieldName) => {
+    setEditModes((prevEditingStates) => ({
+      ...prevEditingStates,
+      [fieldName]: true,
+    }));
+  };
+
+  // set field in editModes to be false when the user finish editing
+  const handleCloseEdit = (fieldName) => {
+    setEditModes((prevEditingStates) => ({
+      ...prevEditingStates,
+      [fieldName]: false,
+    }));
+  };
 
   useEffect(() => {
     let defaultData = async (e) => {
@@ -59,43 +109,17 @@ function Profile() {
           (prof) => prof.user === user.data.data._id
         );
 
-        // useEffect(() => { setProfile(profile_to_set) }, [])
         setProfile(profile_to_set[0]);
-        // setProfile(prevPostsData=> ([...prevPostsData, ...profile_to_set]));
-        // profile.primaryName = profile_to_set.primaryName;
-        // setProfile(
-
-        // setProfile(
-        // data.data.filter((prof) => prof.user === user.data.data._id)
-        // );
-        // );
-        console.log("profile:", profile);
       } catch (error) {
         console.log(error);
       }
     };
 
     defaultData();
-    console.log("profile 2: ", profile);
   }, []);
 
   console.log("profile yoyo: ", profile);
   if (profile) {
-    const {
-      primaryName,
-      keywords,
-      email,
-      phone,
-      education,
-      institution,
-      title,
-      major,
-      focusArea,
-      honors,
-      experiences,
-      papers,
-    } = profile;
-
     return (
       <div>
         <div className="container-profile">
@@ -105,35 +129,145 @@ function Profile() {
             alt="profile.jpg"
           />
           <div className="container-detail-1">
-            <h1 className="profile-name">{primaryName}</h1>
-            <h4>{email}</h4>
-            <h4>{phone}</h4>
+            <div className="container-detail-info">
+              {editModes.primaryName ? (
+                <MultilineEdit
+                  placeholder="Name: "
+                  value={profile.primaryName}
+                  setValue={(value) => setProfileField('primaryName', value)}
+                  setIsEdit={() => handleCloseEdit('primaryName')}
+                  shouldFocus={true}
+                />
+              ) : (
+                <>
+                  <BiEdit className="edit-button" onClick={() => handleClickOnEdit('primaryName')} />
+                  <h1>{profile.primaryName}</h1>
+                </>
+              )}
+            </div>
+
+            <div className="container-detail-info">
+              {editModes.email ? (
+                <MultilineEdit
+                  placeholder="Email: "
+                  value={profile.email}
+                  setValue={(value) => setProfileField('email', value)}
+                  setIsEdit={() => handleCloseEdit('email')}
+                  shouldFocus={true}
+                />
+              ) : (
+                <>
+                  <BiEdit className="edit-button" onClick={() => handleClickOnEdit('email')} />
+                  <h4>{profile.email}</h4>
+                </>
+              )}
+            </div>
+
+            <div className="container-detail-info">
+              {editModes.phone ? (
+                <MultilineEdit
+                  placeholder="Phone: "
+                  value={profile.phone}
+                  setValue={(value) => setProfileField('phone', value)}
+                  setIsEdit={() => handleCloseEdit('phone')}
+                  shouldFocus={true}
+                />
+              ) : (
+                <>
+                  <BiEdit className="edit-button" onClick={() => handleClickOnEdit('phone')} />
+                  <h4>{profile.phone}</h4>
+                </>
+              )}
+            </div>
           </div>
 
-          <div class="container-vertical-line"></div>
+          <div className="container-vertical-line"></div>
+
           <div className="container-detail-2">
-            <h3>{institution}</h3>
-            <h3>Title</h3>
-            <ul>
-              {title?.map((titl, index) => {
-                return (
-                  <li className="title" key={index}>
-                    {titl}
-                  </li>
-                );
-              })}
-            </ul>
-            <h3>{major}</h3>
-            <h3>Focus Area</h3>
-            <ul>
-              {focusArea?.map((foc, index) => {
-                return (
-                  <li className="focusArea" key={index}>
-                    {foc}
-                  </li>
-                );
-              })}
-            </ul>
+            <div className="container-detail-info">
+              {/* TODO: change editModes.institution to a button */}
+              {editModes.institution ? (
+                <>
+                  <MultilineEdit
+                    placeholder="institution: "
+                    value={profile.institution}
+                    setValue={(value) => setProfileField('institution', value)}
+                    setIsEdit={() => handleCloseEdit('institution')}
+                    shouldFocus={true}
+                  />
+
+                  <h3>Title</h3>
+
+                  <ul>
+                    {profile.titles?.map((title, index) => (
+                      <li className="title" key={index}>
+                        <MultilineEdit
+                          placeholder="Title: "
+                          value={title}
+                          index={index}
+                          setValue={(value, index) => setProfileField('titles', value, index)}
+                          setIsEdit={() => handleCloseEdit('titles')}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+
+                  <h3> Major </h3>
+                  <MultilineEdit
+                    placeholder="Major: "
+                    value={profile.major}
+                    setValue={(value) => setProfileField('major', value)}
+                    setIsEdit={() => handleCloseEdit('major')}
+                  />
+
+                  <h3>Focus Area</h3>
+                  <ul>
+                    {profile.focusAreas?.map((focusArea, index) => {
+                      return (
+                        <li className="focusArea" key={index}>
+                          <MultilineEdit
+                            placeholder="FocusArea: "
+                            value={focusArea}
+                            index={index}
+                            setValue={(value, index) => setProfileField('focusAreas', value, index)}
+                            setIsEdit={() => handleCloseEdit('focusAreas')}
+                          />
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </>
+              ) : (
+                <>
+                  <BiEdit className="edit-button" onClick={() => handleClickOnEdit('major')} />
+                  <h3>{profile.institution}</h3>
+                  <h3>Title</h3>
+
+                  <ul>
+                    {profile.titles?.map((title, index) => {
+                      return (
+                        <li className="title" key={index}>
+                          {title}
+                        </li>
+                      );
+                    })}
+                  </ul>
+
+                  <h3> Major: {profile.major}</h3>
+                  <h3>Focus Area</h3>
+                  <ul>
+                    {profile.focusAreas?.map((focusArea, index) => {
+                      return (
+                        <li className="focusArea" key={index}>
+                          {focusArea}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </>
+              )}
+            </div>
+
           </div>
           <div className="edit-buttons">
             <Link to="/">
@@ -154,10 +288,10 @@ function Profile() {
           </div>
               <h1>Education</h1>
               <ul>
-                {education?.map((edu, index) => {
+                {profile.educations?.map((education, index) => {
                   return (
                     <li className="education" key={index}>
-                      {edu}
+                      {education}
                     </li>
                   );
                 })}
@@ -172,10 +306,10 @@ function Profile() {
           </div>
               <h1>Honors</h1>
               <ul>
-                {honors?.map((hon, index) => {
+                {profile.honors?.map((honor, index) => {
                   return (
                     <li className="honor" key={index}>
-                      {hon}
+                      {honor}
                     </li>
                   );
                 })}
@@ -191,10 +325,10 @@ function Profile() {
           </div>
               <h1>Experience</h1>
               <ul>
-                {experiences?.map((exp, index) => {
+                {profile.experiences?.map((experience, index) => {
                   return (
                     <li className="experience" key={index}>
-                      {exp}
+                      {experience}
                     </li>
                   );
                 })}
@@ -210,10 +344,10 @@ function Profile() {
           </div>
               <h1>Key Words</h1>
               <ul>
-                {keywords?.map((keyw, index) => {
+                {profile.keywords?.map((keyword, index) => {
                   return (
                     <li className="keyword" key={index}>
-                      {keyw}
+                      {keyword}
                     </li>
                   );
                 })}
@@ -230,10 +364,10 @@ function Profile() {
           </div>
             <h1>Published Papers</h1>
             <ul className="published-papers">
-              {papers?.map((papel, index) => {
+              {profile.papers?.map((paper, index) => {
                 return (
                   <li className="published-paper" key={index}>
-                    {papel}
+                    {paper}
                   </li>
                 );
               })}
@@ -252,108 +386,6 @@ function Profile() {
       </div>
     );
   }
-
-  // console.log("primary yoyo: ", primaryName);
-
-  // return (
-  //   <div>
-  //     <div className="container-profile">
-  //       <div className="container-img">
-  //         <img
-  //           src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-  //           alt="profile.jpg"
-  //         />
-  //       </div>
-  //       <div className="container-detail-1">
-  //         <h1 className="profile-name">{primaryName}</h1>
-  //         <h4>{email}</h4>
-  //         <h4>{phone}</h4>
-  //       </div>
-  //       <hr width="1" size="300" />
-  //       <div className="container-detail-2">
-  //         <h3>{institution}</h3>
-  //         <h3>{title}</h3>
-  //         <h3>Computer science</h3>
-  //         <h3>Artificial Intelligence, Data and Information Systems</h3>
-  //       </div>
-  //     </div>
-  //     <div className="container-professional-detail">
-  //       <div className="educations">
-  //         <h1>Education</h1>
-  //         <ul>
-  //           {education?.map((edu, index) => {
-  //             return (
-  //               <li className="education" key={index}>
-  //                 {edu}
-  //               </li>
-  //             );
-  //           })}
-  //         </ul>
-  //       </div>
-  //       <div className="honors">
-  //         <h1>Honors</h1>
-  //         <ul>
-  //           {honors?.map((hon, index) => {
-  //             return (
-  //               <li className="honor" key={index}>
-  //                 {hon}
-  //               </li>
-  //             );
-  //           })}
-  //         </ul>
-  //       </div>
-  //       <div className="experiences">
-  //         <h1>Experience</h1>
-  //         <ul>
-  //           {experiences?.map((exp, index) => {
-  //             return (
-  //               <li className="experience" key={index}>
-  //                 {exp}
-  //               </li>
-  //             );
-  //           })}
-  //         </ul>
-  //       </div>
-  //       <div className="keywords">
-  //         <h1>Key Words</h1>
-  //         <ul>
-  //           <li className="keyword">
-  //             {/* Ph.D. Electrial Engineering, Stanford University, 2001 */}
-  //             {keywords}
-  //           </li>
-  //         </ul>
-  //       </div>
-  //     </div>
-  //     <div className="container-papers">
-  //       <h1>Published Papers</h1>
-  //       <ul className="published-papers">
-  //         {papers?.map((pap, index) => {
-  //           return (
-  //             <li className="published-paper" key={index}>
-  //               {pap}
-  //             </li>
-  //           );
-  //         })}
-  //       </ul>
-  //     </div>
-  //   </div>
-  // );
 }
 
 export default Profile;
-
-// import React from "react";
-
-// function Profile() {
-//   return (
-//     <div>
-//       <header>
-//         <div className="container-profile">
-//           <h2>hello</h2>
-//         </div>
-//       </header>
-//     </div>
-//   );
-// }
-
-// export default Profile;
