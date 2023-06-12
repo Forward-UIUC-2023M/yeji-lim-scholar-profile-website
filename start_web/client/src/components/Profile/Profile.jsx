@@ -17,6 +17,8 @@ import { BiEdit } from 'react-icons/bi';
 function Profile() {
   const navigate = useNavigate();
 
+  const [photo, setPhoto] = useState("");
+
   const [profile, setProfile] = useState({
     primaryName: '',
     keywords: [],
@@ -99,6 +101,9 @@ function Profile() {
             Authorization: `Bearer ${account}`,
           },
         });
+        console.log("user is: ", user.data.data.photo);
+        setPhoto(user.data.data.photo);
+        console.log("user is 2: ", photo);
         // setId(user.data.data._id);
         // console.log("id", id);
 
@@ -118,16 +123,12 @@ function Profile() {
     defaultData();
   }, []);
 
-  console.log("profile yoyo: ", profile);
+  console.log("photo yoyo: ", photo);
   if (profile) {
     return (
       <div>
         <div className="container-profile">
-          <img
-            className="container-img"
-            src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-            alt="profile.jpg"
-          />
+          <img className="container-img" src={photo} alt="profile.jpg" />
           <div className="container-detail-1">
             <div className="container-detail-info">
               {editModes.primaryName ? (
