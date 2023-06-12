@@ -15,7 +15,7 @@ import { useState, useRef, useEffect } from 'react';
  * Return:
  *   - A textarea element with the specified placeholder, value, and event handlers.
  */
-const MultilineEdit = ({ placeholder, value, index = null, setValue, setIsEdit, shouldFocus = false }) => {
+const MultilineEdit = ({ placeholder, value, index = null, setValue, shouldFocus = false }) => {
   const [editingValue, setEditingValue] = useState(value);
 
   const onChange = (event) => setEditingValue(event.target.value);
@@ -34,30 +34,31 @@ const MultilineEdit = ({ placeholder, value, index = null, setValue, setIsEdit, 
     }
 
     // set corresponding editMode to be false
-    setIsEdit();
+
   };
 
   const onInput = (target) => {
-    if (target.scrollHeight > 33) {
-      target.style.height = "5px";
-      target.style.height = target.scrollHeight - 16 + "px";
-    }
+    target.style.height = "auto";
+    target.style.height = target.scrollHeight + "px"; // Set the height based on the scroll height
   };
 
   const textareaRef = useRef();
 
   useEffect(() => {
     onInput(textareaRef.current);
+  }, [onInput, textareaRef]);
 
+  useEffect(() => {
     if (shouldFocus) {
       // focus on textarea and set cursor position to end of text
       textareaRef.current.focus();
       textareaRef.current.setSelectionRange(editingValue.length, editingValue.length);
     }
-  }, [onInput, textareaRef]);
+  }, []);
 
   return (
     <textarea
+      className="multiline-edit-textarea"
       rows={1}
       aria-label="Field name"
       value={editingValue}
