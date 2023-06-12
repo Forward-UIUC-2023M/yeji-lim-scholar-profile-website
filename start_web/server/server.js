@@ -28,7 +28,7 @@ connectDB();
 // Route files
 const auth = require("./routes/auth");
 const profiles = require("./routes/profiles");
-// const photo = require("./routes/photo");
+const photo = require("./routes/photo");
 
 // Cookie parser
 app.use(cookieParser());
@@ -41,6 +41,7 @@ if (process.env.NODE_ENV === "development") {
 // Mount routers
 app.use("/api/auth", auth);
 app.use("/api/profiles", profiles);
+app.use("/api/photo", photo);
 
 const PORT = process.env.PORT || 3000;
 

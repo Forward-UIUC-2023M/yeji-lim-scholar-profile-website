@@ -8,11 +8,12 @@ const crypto = require("crypto");
 // @route     POST /api /auth/register
 // @access    Public
 exports.register = asyncHandler(async (req, res, next) => {
-  const { name, email, password } = req.body;
+  const { firstName,lastName, email, password } = req.body;
 
   // Create user
   const user = await User.create({
-    name,
+    firstName,
+    lastName,
     email,
     password,
   });
@@ -59,6 +60,41 @@ exports.getMe = asyncHandler(async (req, res, next) => {
     data: user,
   });
 });
+
+// @desc    Update user
+// @route   PUT /api/auth/:id
+// @access  Private
+exports.updateUser = asyncHandler(async (req, res, next) => {
+    console.log("updatUser ID: ", req.params.id);
+    let user = await User.findById(req.params.id);
+  
+    if (!user) {
+      return next(
+        new ErrorResponse(
+          `User not found with the id of ${req.params.id}`,
+          404
+        )
+      );
+    }
+  
+    // // Make sure user is item owner
+    // if (profile.user.toString() !== req.user.id) {
+    //   return next(
+    //     new ErrorResponse(
+    //       `User ${req.params.id} is not authorized to update this item`,
+    //       401
+    //     )
+    //   );
+    // }
+  
+    user = await User.findOneAndUpdate({ _id: req.params.id }, req.body, {
+      new: true,
+      runValidators: true,
+    });
+  
+    res.status(200).json({ success: true, data: user });
+  });
+
 
 // @desc      Forgot password
 // @route     POST /api/v1/auth/forgotpassword
@@ -124,5 +160,5 @@ const sendTokenResponse = (user, statusCode, res) => {
   res
     .status(statusCode)
     .cookie("token", token, options)
-    .json({ success: true, token });
+    .json({ success: true, token, data: user});
 };

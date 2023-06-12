@@ -1,31 +1,44 @@
 .register-container {
-  width: 30%;
-  background-color: #f6f3ee;
+  width: 50%;
+  background-color: #fff;
   text-align: center;
   margin: auto;
   margin-top: 180px;
   padding: auto;
-  padding-top: 70px;
-  padding-bottom: 50px;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  border-radius: 20px;
   /* margin: 200px 200px 200px 200px; */
 }
 
-.register-input {
-  color: #625155;
-  font-size: 20px;
-  margin-bottom: 15px;
+.register-content-container {
+    display: flex;
+}
+
+.register-heading {
+  color: black;
+  margin: auto;
+  margin-bottom: 12px;
+  /* margin-left: 28%; */
+}
+
+.register-texts-container {
+  margin-left: 5%;
+  width: 60%;
+  /* background-color: red; */
+  text-align: left;
 }
 
 .register-name {
   margin: auto;
   /* margin-bottom: 30px; */
-  margin-bottom: 45px;
+  /* margin-bottom: px; */
   padding: 7px 7px 7px 7px;
   box-sizing: border-box;
   border: 1px solid #fff;
   border-radius: 6px;
-  width: 50%;
-
+  width: 80%;
+  background-color: rgb(241, 241, 247);
   font-size: 18px;
 }
 
@@ -37,7 +50,8 @@
   box-sizing: border-box;
   border: 1px solid #fff;
   border-radius: 6px;
-  width: 50%;
+  width: 80%;
+  background-color: rgb(241, 241, 247);
   font-size: 18px;
 }
 
@@ -49,26 +63,52 @@
   box-sizing: border-box;
   border: 1px solid #fff;
   border-radius: 6px;
-  width: 50%;
+  width: 80%;
+  background-color: rgb(241, 241, 247);
   font-size: 18px;
 }
 
 .register-button {
-  padding: 0.5rem 1rem;
+  padding: 0.2rem 2.5rem;
   border: 1px solid #fff;
-  background: rgb(190, 178, 167);
+  background: #0bc1e9;
   color: #fff;
-  font-size: 0.9rem;
-  font-weight: 700;
+  font-size: 22px;
+  /* font-weight: 700; */
   cursor: pointer;
-  border-radius: 10px;
+  border-radius: 25px;
 }
 
 .register-error {
-  margin-bottom: 35px;
+  margin-bottom: 25px;
 }
 
 .register-link {
-    margin: auto;
-    margin-top: 15px;
+  margin: auto;
+  margin-top: 15px;
+}
+
+.register-footer {
+  margin-top: 32px;
+}
+
+.register-footer-span {
+  font-size: 16px;
+  margin-bottom: 50px;
+}
+
+.register-footer-register {
+  margin-bottom: 10px;
+}
+
+.register-login-btn {
+  padding: 0.2rem 0.7rem;
+  margin-left: 6px;
+  border: 1px solid #fff;
+  background: #7d9af2;
+  color: #fff;
+  font-size: 16px;
+  /* font-weight: 700; */
+  cursor: pointer;
+  border-radius: 25px;
 }
