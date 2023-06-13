@@ -20,7 +20,8 @@ function Profile() {
 
   const [photo, setPhoto] = useState("");
   const [profile, setProfile] = useState({
-    primaryName: "",
+    firstName: "",
+    lastName: "",
     keywords: [],
     email: "",
     phone: "",
@@ -35,7 +36,8 @@ function Profile() {
   });
 
   const [inlineEditMode, setInlineEditMode] = useState({
-    primaryName: false,
+    firstName: false,
+    lastName: false,
     basicInfo: false,
     keywords: false,
     email: false,
@@ -180,7 +182,7 @@ function Profile() {
               Name:
               <Form.Control
                 type="text"
-                defaultValue={profile.primaryName}
+                defaultValue={profile.firstName}
                 placeholder="Name"
               />
               Email:
@@ -236,9 +238,15 @@ function Profile() {
 
               <div className="container-detail-1">
                 <MultilineEdit
-                  placeholder="Name: "
-                  value={profile.primaryName}
-                  setValue={(value) => setProfileField("primaryName", value)}
+                  placeholder="First Name: "
+                  value={profile.firstName}
+                  setValue={(value) => setProfileField("firstName", value)}
+                  shouldFocus={true}
+                />
+                <MultilineEdit
+                  placeholder="Last Name: "
+                  value={profile.lastName}
+                  setValue={(value) => setProfileField("lastName", value)}
                   shouldFocus={true}
                 />
 
@@ -321,7 +329,10 @@ function Profile() {
               <img className="container-img" src={photo} alt="profile.jpg" />
 
               <div className="container-detail-1">
-                <h1>{profile.primaryName}</h1>
+                {/* <h1>{profile.firstName} {profile.lsatName}</h1> */}
+                <h1>
+                  {profile.firstName} <span>{profile.lastName}</span>
+                </h1>
                 <h4>{profile.email}</h4>
                 <h4>{profile.phone}</h4>
               </div>
