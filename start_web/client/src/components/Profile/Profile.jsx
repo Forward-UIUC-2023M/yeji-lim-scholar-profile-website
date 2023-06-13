@@ -9,7 +9,13 @@ import axios from "axios";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import * as FiIcons from "react-icons/fi";
 import { IconContext } from "react-icons";
-import { BiEdit, BiCheckSquare, BiXCircle } from "react-icons/bi";
+import {
+  BiEdit,
+  BiCheckSquare,
+  BiXCircle,
+  BiPlusCircle,
+  BiMinusCircle,
+} from "react-icons/bi";
 import { Button, Dropdown, Modal, Form } from "react-bootstrap";
 
 // Connect this to backend, loop through back end to get the list elements
@@ -19,12 +25,12 @@ function Profile() {
   const navigate = useNavigate();
 
   const [photo, setPhoto] = useState("");
-  const [profile, setProfile] = useState({
+
+  const defaultProfile = {
     primaryName: "",
     keywords: [],
     email: "",
     phone: "",
-    experiences: [],
     institution: "",
     titles: [],
     major: "",
@@ -32,32 +38,26 @@ function Profile() {
     honors: [],
     experiences: [],
     papers: [],
-  });
+  };
+
+  const [profile, setProfile] = useState(defaultProfile); // user's current profile displayed
+  const [updatedProfile, setUpdatedProfile] = useState(defaultProfile); // user's updated profile in inline edit or modal form control
 
   const [inlineEditMode, setInlineEditMode] = useState({
-    primaryName: false,
     basicInfo: false,
-    keywords: false,
-    email: false,
-    phone: false,
-    experiences: false,
-    institution: false,
-    titles: false,
-    major: false,
-    focusAreas: false,
     honors: false,
     experiences: false,
+    keywords: false,
     papers: false,
-  }); // states for whether current elements, e.g. primaryName, is in edit mode
+  }); // states for whether current elements, e.g. primaryName, is in inline edit mode
 
   const [modalEditMode, setModalEditMode] = useState({
     basicInfo: false,
-    experiences: false,
     honors: false,
     experiences: false,
     keywords: false,
     papers: false,
-  });
+  }); // states for whether current elements, e.g. primaryName, is in modal edit mode
 
   // use of custom edit button instead of original dropdown button
   const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
@@ -81,7 +81,21 @@ function Profile() {
   // setter for all fields in the user profile
   const setProfileField = (fieldName, value, index = null) => {
     setProfile((prevProfile) => {
-      if (index !== null) {
+      if (index === null) {
+        // Handle non-indexed fields
+        return {
+          ...prevProfile,
+          [fieldName]: value,
+        };
+      } else if (index === -1) {
+        // Handle adding new entry to the list
+        const updatedField = [...prevProfile[fieldName], value];
+
+        return {
+          ...prevProfile,
+          [fieldName]: updatedField,
+        };
+      } else {
         // Handle indexed fields
         const updatedField = [...prevProfile[fieldName]];
         updatedField[index] = value;
@@ -90,13 +104,20 @@ function Profile() {
           ...prevProfile,
           [fieldName]: updatedField,
         };
-      } else {
-        // Handle non-indexed fields
-        return {
-          ...prevProfile,
-          [fieldName]: value,
-        };
       }
+    });
+  };
+
+  // remove the specified index in the given fieldName array, fieldName must be an array!
+  const removeProfileField = (fieldName, index = null) => {
+    setProfile((prevProfile) => {
+      const updatedField = [...prevProfile[fieldName]];
+      updatedField.splice(index, 1);
+
+      return {
+        ...prevProfile,
+        [fieldName]: updatedField,
+      };
     });
   };
 
@@ -132,6 +153,18 @@ function Profile() {
     }));
   };
 
+  // set profile to be the updated version and then close the modal
+  const handleSaveModalEdit = (fieldName) => {
+    setProfile(updatedProfile);
+
+    setModalEditMode((prevEditingStates) => ({
+      ...prevEditingStates,
+      [fieldName]: false,
+    }));
+  };
+
+  const handleAddTitle = () => {};
+
   useEffect(() => {
     let defaultData = async (e) => {
       try {
@@ -156,6 +189,7 @@ function Profile() {
         );
 
         setProfile(profile_to_set[0]);
+        setUpdatedProfile(profile_to_set[0]);
       } catch (error) {
         console.log(error);
       }
@@ -164,7 +198,8 @@ function Profile() {
     defaultData();
   }, []);
 
-  console.log("profile yoyo: ", profile);
+  console.log("profile: ", profile);
+  console.log("profile new: ", updatedProfile);
   if (profile) {
     return (
       <div className="profile-page-container">
@@ -182,37 +217,103 @@ function Profile() {
                 type="text"
                 defaultValue={profile.primaryName}
                 placeholder="Name"
+                onChange={(e) =>
+                  setUpdatedProfile({
+                    ...updatedProfile,
+                    primaryName: e.target.value,
+                  })
+                }
               />
               Email:
               <Form.Control
                 type="text"
                 defaultValue={profile.email}
                 placeholder="Email"
+                onChange={(e) =>
+                  setUpdatedProfile({
+                    ...updatedProfile,
+                    email: e.target.value,
+                  })
+                }
               />
               Phone:
               <Form.Control
                 type="text"
                 defaultValue={profile.phone}
                 placeholder="Phone"
+                onChange={(e) =>
+                  setUpdatedProfile({
+                    ...updatedProfile,
+                    phone: e.target.value,
+                  })
+                }
               />
               Institution:
               <Form.Control
                 type="text"
                 defaultValue={profile.institution}
                 placeholder="Institution"
+                onChange={(e) =>
+                  setUpdatedProfile({
+                    ...updatedProfile,
+                    institution: e.target.value,
+                  })
+                }
               />
+              Title:
+              <ul>
+                {profile.titles?.map((title, index) => (
+                  <li key={index}>
+                    <Form.Control
+                      type="text"
+                      defaultValue={title}
+                      placeholder="Title"
+                      onChange={(e) => {
+                        const updatedField = [...updatedProfile.titles];
+                        updatedField[index] = e.target.value;
+
+                        setUpdatedProfile({
+                          ...updatedProfile,
+                          titles: updatedField,
+                        });
+                      }}
+                    />
+                  </li>
+                ))}
+              </ul>
               Major:
               <Form.Control
                 type="text"
                 defaultValue={profile.major}
                 placeholder="Major"
+                onChange={(e) =>
+                  setUpdatedProfile({
+                    ...updatedProfile,
+                    major: e.target.value,
+                  })
+                }
               />
               Focus Areas:
-              <Form.Control
-                type="text"
-                defaultValue={profile.focusAreas}
-                placeholder="Focus Areas"
-              />
+              <ul>
+                {profile.focusAreas?.map((focusArea, index) => (
+                  <li key={index}>
+                    <Form.Control
+                      type="text"
+                      defaultValue={focusArea}
+                      placeholder="Focus Area"
+                      onChange={(e) => {
+                        const updatedField = [...updatedProfile.focusAreas];
+                        updatedField[index] = e.target.value;
+
+                        setUpdatedProfile({
+                          ...updatedProfile,
+                          focusAreas: updatedField,
+                        });
+                      }}
+                    />
+                  </li>
+                ))}
+              </ul>
             </Modal.Body>
             <Modal.Footer>
               <Button
@@ -223,7 +324,7 @@ function Profile() {
               </Button>
               <Button
                 variant="primary"
-                onClick={() => handleCloseModalEdit("basicInfo")}
+                onClick={() => handleSaveModalEdit("basicInfo")}
               >
                 Save Changes
               </Button>
@@ -267,18 +368,53 @@ function Profile() {
                 <h3>Title</h3>
 
                 <ul>
-                  {profile.titles?.map((title, index) => (
-                    <li className="title" key={index}>
-                      <MultilineEdit
-                        placeholder="Title: "
-                        value={title}
-                        index={index}
-                        setValue={(value, index) =>
-                          setProfileField("titles", value, index)
-                        }
-                      />
-                    </li>
-                  ))}
+                  {profile.titles?.map((title, index) => {
+                    if (index !== profile.titles.length - 1) {
+                      return (
+                        <li className="title" key={index}>
+                          <div className="d-flex">
+                            <MultilineEdit
+                              placeholder="Title: "
+                              value={title}
+                              index={index}
+                              setValue={(value, index) =>
+                                setProfileField("titles", value, index)
+                              }
+                            />
+                            <BiMinusCircle
+                              size={30}
+                              color="#123456"
+                              className="ms-3 mt-1 bi-add-button"
+                              onClick={() =>
+                                removeProfileField("titles", index)
+                              }
+                            />
+                          </div>
+                        </li>
+                      );
+                    } else {
+                      return (
+                        <li className="title" key={index}>
+                          <div className="d-flex">
+                            <MultilineEdit
+                              placeholder="Title: "
+                              value={title}
+                              index={index}
+                              setValue={(value, index) =>
+                                setProfileField("titles", value, index)
+                              }
+                            />
+                            <BiPlusCircle
+                              size={30}
+                              color="#123456"
+                              className="ms-3 mt-1 bi-add-button"
+                              onClick={() => setProfileField("titles", "", -1)}
+                            />
+                          </div>
+                        </li>
+                      );
+                    }
+                  })}
                 </ul>
 
                 <h3> Major </h3>
@@ -308,11 +444,15 @@ function Profile() {
               </div>
 
               <BiCheckSquare
+                className="check-button"
                 size={35}
+                color="green"
                 onClick={() => handleCloseInlineEdit("basicInfo")}
               />
               <BiXCircle
+                className="cancel-button"
                 size={35}
+                color="red"
                 onClick={() => handleCloseInlineEdit("basicInfo")}
               />
             </div>
@@ -382,10 +522,10 @@ function Profile() {
 
         <div className="d-flex">
           <div className="container-professional-detail">
-            <div className="experiences">
+            <div className="educations">
               <Modal
-                show={modalEditMode.experiences}
-                onHide={() => handleCloseModalEdit("experiences")}
+                show={modalEditMode.educations}
+                onHide={() => handleCloseModalEdit("educations")}
               >
                 <Modal.Header closeButton>
                   <Modal.Title>Education</Modal.Title>
@@ -394,7 +534,7 @@ function Profile() {
                   Education:
                   <Form.Control
                     type="text"
-                    defaultValue={profile.experiences}
+                    defaultValue={profile.educations}
                     placeholder="Education"
                   />
                 </Modal.Body>
@@ -414,11 +554,11 @@ function Profile() {
                 </Modal.Footer>
               </Modal>
 
-              {inlineEditMode.experiences ? (
+              {inlineEditMode.educations ? (
                 <>
                   <h1>Education</h1>
                   <ul>
-                    {profile.experiences?.map((education, index) => {
+                    {profile.educations?.map((education, index) => {
                       return (
                         <li className="education" key={index}>
                           <MultilineEdit
@@ -426,7 +566,7 @@ function Profile() {
                             value={education}
                             index={index}
                             setValue={(value, index) =>
-                              setProfileField("experiences", value, index)
+                              setProfileField("educations", value, index)
                             }
                           />
                         </li>
@@ -436,11 +576,11 @@ function Profile() {
 
                   <BiCheckSquare
                     size={35}
-                    onClick={() => handleCloseInlineEdit("experiences")}
+                    onClick={() => handleCloseInlineEdit("educations")}
                   />
                   <BiXCircle
                     size={35}
-                    onClick={() => handleCloseInlineEdit("experiences")}
+                    onClick={() => handleCloseInlineEdit("educations")}
                   />
                 </>
               ) : (
@@ -450,12 +590,12 @@ function Profile() {
                       <Dropdown.Toggle as={CustomToggle} />
                       <Dropdown.Menu>
                         <Dropdown.Item
-                          onClick={() => handleOpenInlineEdit("experiences")}
+                          onClick={() => handleOpenInlineEdit("educations")}
                         >
                           Inline Edit
                         </Dropdown.Item>
                         <Dropdown.Item
-                          onClick={() => handleOpenModalEdit("experiences")}
+                          onClick={() => handleOpenModalEdit("educations")}
                         >
                           Edit in Modal
                         </Dropdown.Item>
@@ -465,7 +605,7 @@ function Profile() {
 
                   <h1>Education</h1>
                   <ul>
-                    {profile.experiences?.map((education, index) => {
+                    {profile.educations?.map((education, index) => {
                       return (
                         <li className="education" key={index}>
                           {education}
