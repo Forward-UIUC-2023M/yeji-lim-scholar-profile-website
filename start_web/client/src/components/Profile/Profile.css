@@ -1,10 +1,16 @@
+.profile-page-container {
+  height: 100%;
+  width: 100%;
+  background-color: #fff;
+}
+
 .container-profile {
   display: flex;
   align-items: stretch;
   margin: 5% 5% 2% 5%;
   padding: 50px 50px 50px 80px;
   border-radius: 35px;
-  background-color: #f6f3ee;
+  background-color: #e6eaff;
 }
 
 .container-img {
@@ -21,7 +27,7 @@
   margin: 0 60px 0 60px;
   /* margin-top: 12%; */
   padding: auto;
-  padding-top: 20px;
+  padding-top: 12%;
   text-align: center;
   overflow-wrap: break-word;
 }
@@ -50,7 +56,7 @@
   /* margin-top: 100px; */
   padding: 70px;
   border-radius: 35px;
-  background-color: #f6f3ee;
+  background-color: #e6eaff;
   /* display: inline-flex; */
   text-align: center;
 }
@@ -61,7 +67,7 @@
   margin: 2% 5% 2% 2%;
   padding: 70px;
   border-radius: 35px;
-  background-color: #f6f3ee;
+  background-color: #e6eaff;
   overflow: auto;
   text-align: center;
 }
@@ -76,27 +82,27 @@ img {
   /* margin: 0 100% 0 0; */
   font-size: 50px;
   margin-bottom: 50px;
-  color: #625155;
+  color: black;
   /* margin-left: 50px; */
   /* display: flex; */
   /* float: inline-end; */
 }
 
 h1 {
-  color: #625155;
+  color: black;
   margin-bottom: 30px;
 }
 
 h4 {
   margin-top: 20px;
   font-size: 20px;
-  color: #927e80;
+  color: rgb(100, 96, 122);
 }
 
 h3 {
   margin-top: 20px;
   font-size: 20px;
-  color: #625155;
+  color: black;
 }
 
 span {
@@ -108,19 +114,19 @@ span {
 
 .title {
   margin-bottom: 13px;
-  color: #625155;
+  color: black;
   text-align: left;
 }
 
 .focusArea {
   margin-bottom: 13px;
-  color: #625155;
+  color: black;
   text-align: left;
 }
 
 .paper {
   margin-bottom: 20px;
-  color: #625155;
+  color: black;
   text-align: left;
 }
 
@@ -133,7 +139,7 @@ span {
 
 .education {
   margin-bottom: 13px;
-  color: #625155;
+  color: black;
   text-align: left;
 }
 
@@ -146,7 +152,7 @@ span {
 
 .honor {
   margin-bottom: 13px;
-  color: #625155;
+  color: black;
   text-align: left;
   /* font-size: 12px; */
 }
@@ -160,7 +166,7 @@ span {
 
 .experience {
   margin-bottom: 13px;
-  color: #625155;
+  color: black;
   text-align: left;
 }
 
@@ -172,7 +178,7 @@ span {
 
 .keyword {
   margin-bottom: 13px;
-  color: #625155;
+  color: black;
   text-align: left;
 }
 
@@ -196,7 +202,7 @@ textarea {
   position: absolute;
   display: none;
   font-size: 200%;
-  color: #625155; 
+  color: black;
   z-index: 999;
 }
 
@@ -205,25 +211,35 @@ textarea {
 }
 
 .no-profile-container {
-  width: 30%;
+  width: 40%;
   height: 300px;
-  background-color: #f6f3ee;
+  background-color: #fff;
   margin: auto;
   margin-top: 250px;
-  padding-top: 120px;
-  border-radius: 35px;
+  padding-top: 5%;
+  padding-left: 3%;
+  padding-right: 3%;
+  border-radius: 20px;
   text-align: center;
 }
 
 .go-to-form-button {
-  padding: 0.5rem 1rem;
+  /* padding: 0.5rem 1rem;
   border: 1px solid #fff;
-  background: rgb(190, 178, 167);
+  background: #0bc1e9;
   color: #fff;
   font-size: 0.9rem;
   font-weight: 700;
   cursor: pointer;
-  border-radius: 10px;
+  border-radius: 10px; */
+  padding: 0.2rem 2.5rem;
+  border: 1px solid #fff;
+  background: #0bc1e9;
+  color: #fff;
+  font-size: 22px;
+  /* font-weight: 700; */
+  cursor: pointer;
+  border-radius: 25px;
 }
 
 .edit-buttons {

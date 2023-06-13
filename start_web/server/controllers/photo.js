@@ -11,8 +11,8 @@ const path = require("path");
  * ITEM IMAGE STORING STARTS
  */
 const s3 = new aws.S3({
-  accessKeyId: "AKIA57GDJ5U7YAQBHPB5",
-  secretAccessKey: "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",
+  accessKeyId: "AKIA57GDJ5U727NGJ7MK",
+  secretAccessKey: "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",
   Bucket: "forward-data-scholar-profile",
 });
 

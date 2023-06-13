@@ -238,13 +238,29 @@ function Register() {
             /> */}
               </div>
               <div className="register-photo-container">
+                <label for="photo" className="profile-photo-label">Profile Photo</label>
                 <input
                   type="file"
                   name="profilePhoto"
                   className="formProfilePhoto"
                   id="photo"
+                  //   id="fileUpload"
                   onChange={handleFileChange}
                 />
+                {/* <label
+                  htmlFor="photo"
+                  className="formProfilePhoto"
+                  style={{cursor: "pointer" }}
+                >
+                  Profile Photo
+                </label>
+                <input
+                  id="photo"
+                  name="profilePhoto"
+                  style={{ visibility: "hidden" }}
+                  type={"file"}
+                  onChange={handleFileChange}
+                ></input> */}
               </div>
             </div>
             <div>

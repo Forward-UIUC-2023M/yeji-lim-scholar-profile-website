@@ -6,7 +6,7 @@ export const NavItems = [
   },
 
   {
-    title: "Browse",
+    title: "Home",
     url: "/",
     cName: "nav-links",
   },

@@ -21,11 +21,12 @@ function Navbar() {
   return (
     <>
       <nav className="NavbarItems">
-        <Link to="#" className="side-bars">
+        {/* <Link to="#" className="side-bars">
           <FaIcons.FaBars onClick={showSidebar} />
-        </Link>
-        <Link to="/">
-          <HiIcons.HiLightBulb className="navbar-logo"/>
+        </Link> */}
+        <Link to="/" className="navbar-logo">
+          {/* <HiIcons.HiLightBulb className="navbar-logo"/> */}
+          ForwardData
         </Link>
         <ul className="navbar-menu">
           {NavItems.map((item, index) => {
