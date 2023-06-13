@@ -12,7 +12,7 @@
 }
 
 .register-content-container {
-    display: flex;
+  display: flex;
 }
 
 .register-heading {
@@ -31,7 +31,7 @@
 
 .register-name {
   margin: auto;
-  /* margin-bottom: 30px; */
+  margin-bottom: 30px;
   /* margin-bottom: px; */
   padding: 7px 7px 7px 7px;
   box-sizing: border-box;
@@ -112,3 +112,52 @@
   cursor: pointer;
   border-radius: 25px;
 }
+
+/* .formProfilePhoto { */
+/* color: red; */
+/* background-color: red; */
+/* border: 1px solid #ccc;
+  display: inline-block;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+input::file-selector-button {
+    font-weight: bold;
+    color: dodgerblue;
+    padding: 0.5em;
+    border: thin solid grey;
+    border-radius: 3px;
+} */
+.register-photo-container {
+  /* text-align: center; */
+  /* padding-left: 5%; */
+  padding-top: 10%;
+  /* background-color: red; */
+}
+
+input[type="file"]::file-selector-button {
+  padding: 0.2rem 0.7rem;
+  border: 1px solid #fff;
+  background: #7d9af2;
+  color: #fff;
+  font-size: 16px;
+  /* font-weight: 700; */
+  cursor: pointer;
+  border-radius: 25px;
+}
+
+.profile-photo-label{
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+/* .formProfilePhoto {
+  padding: 0.2rem 0.7rem;
+  border: 1px solid #fff;
+  background: #7d9af2;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 25px;
+} */

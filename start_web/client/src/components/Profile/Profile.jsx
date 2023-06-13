@@ -167,7 +167,7 @@ function Profile() {
   console.log("profile yoyo: ", profile);
   if (profile) {
     return (
-      <div>
+      <div className="profile-page-container">
         <div>
           <Modal
             show={modalEditMode.basicInfo}

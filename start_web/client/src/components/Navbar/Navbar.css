@@ -20,6 +20,9 @@
   font-size: 50px;
   text-decoration: none;
   cursor: pointer;
+  align-items: center;
+  display: flex;
+  font-weight: 1000;
 }
 
 .fa-react {
