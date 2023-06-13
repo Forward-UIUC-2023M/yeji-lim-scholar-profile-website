@@ -279,3 +279,18 @@ textarea {
   transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
   box-sizing: border-box;
 }
+
+.bi-check-button:hover {
+  transform: translateY(2px);
+  cursor: pointer;
+}
+
+.bi-cancel-button:hover {
+  transform: translateY(2px);
+  cursor: pointer;
+}
+
+.bi-add-button:hover {
+  /* transform: rotate(1px); */
+  cursor: pointer;
+}
