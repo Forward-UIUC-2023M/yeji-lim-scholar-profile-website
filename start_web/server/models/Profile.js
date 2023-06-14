@@ -2,11 +2,6 @@ const mongoose = require("mongoose");
 const Profiles = require("./Profile");
 
 const ProfilesSchema = mongoose.Schema({
-  // primaryName: String,
-  // alternativeName: {
-  //   type: [String],
-  //   default: ["None"],
-  // },
   firstName: String,
   lastName: String,
   links:{
