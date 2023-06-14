@@ -1,9 +1,9 @@
 // reference from https://www.emgoto.com/react-inline-edit/
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from "react";
 
 /*
  * This function renders a textarea element that allows multiline editing.
- * 
+ *
  * Parameters:
  *   - placeholder: The placeholder text to display when the textarea is empty
  *   - value: The current text
@@ -11,11 +11,17 @@ import { useState, useRef, useEffect } from 'react';
  *   - setValue: A function to update the current text as well as the value of the textarea
  *   - setIsEdit: A function to update editMode
  *   - shouldFocus: A boolean indicating whether the textarea should call focus function (default: false)
- * 
+ *
  * Return:
  *   - A textarea element with the specified placeholder, value, and event handlers.
  */
-const MultilineEdit = ({ placeholder, value, index = null, setValue, shouldFocus = false }) => {
+const MultilineEdit = ({
+  placeholder,
+  value,
+  index = null,
+  setValue,
+  shouldFocus = false,
+}) => {
   const [editingValue, setEditingValue] = useState(value);
 
   const onChange = (event) => setEditingValue(event.target.value);
@@ -34,7 +40,6 @@ const MultilineEdit = ({ placeholder, value, index = null, setValue, shouldFocus
     }
 
     // set corresponding editMode to be false
-
   };
 
   const onInput = (target) => {
@@ -52,7 +57,12 @@ const MultilineEdit = ({ placeholder, value, index = null, setValue, shouldFocus
     if (shouldFocus) {
       // focus on textarea and set cursor position to end of text
       textareaRef.current.focus();
-      textareaRef.current.setSelectionRange(editingValue.length, editingValue.length);
+      if (editingValue) {
+        textareaRef.current.setSelectionRange(
+          editingValue.length,
+          editingValue.length
+        );
+      }
     }
   }, []);
 

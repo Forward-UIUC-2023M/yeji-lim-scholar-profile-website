@@ -44,14 +44,12 @@ function Profile() {
   const [updatedProfile, setUpdatedProfile] = useState(defaultProfile); // user's updated profile in inline edit or modal form control
 
   const [inlineEditMode, setInlineEditMode] = useState({
-    firstName: false,
-    lastName: false,
     basicInfo: false,
     honors: false,
     experiences: false,
     keywords: false,
     papers: false,
-  }); // states for whether current elements, e.g. primaryName, is in inline edit mode
+  }); // states for whether current elements, e.g. honors, is in inline edit mode
 
   const [modalEditMode, setModalEditMode] = useState({
     basicInfo: false,
@@ -59,7 +57,7 @@ function Profile() {
     experiences: false,
     keywords: false,
     papers: false,
-  }); // states for whether current elements, e.g. primaryName, is in modal edit mode
+  }); // states for whether current elements, e.g. honors, is in modal edit mode
 
   // use of custom edit button instead of original dropdown button
   const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
@@ -265,9 +263,17 @@ function Profile() {
               <Form.Control
                 type="text"
                 defaultValue={profile.firstName}
-                placeholder="Name"
+                placeholder="First Name"
                 onChange={(e) =>
-                  setUpdatedProfileField("primaryName", e.target.value)
+                  setUpdatedProfileField("firstName", e.target.value)
+                }
+              />
+              <Form.Control
+                type="text"
+                defaultValue={profile.lastName}
+                placeholder="Last Name"
+                onChange={(e) =>
+                  setUpdatedProfileField("lastName", e.target.value)
                 }
               />
               Email:
@@ -365,14 +371,17 @@ function Profile() {
                 <MultilineEdit
                   placeholder="First Name: "
                   value={profile.firstName}
-                  setValue={(value) => setProfileField("firstName", value)}
+                  setValue={(value) =>
+                    setUpdatedProfileField("firstName", value)
+                  }
                   shouldFocus={true}
                 />
                 <MultilineEdit
                   placeholder="Last Name: "
                   value={profile.lastName}
-                  setValue={(value) => setProfileField("lastName", value)}
-                  shouldFocus={true}
+                  setValue={(value) =>
+                    setUpdatedProfileField("lastName", value)
+                  }
                 />
 
                 <MultilineEdit
@@ -538,9 +547,8 @@ function Profile() {
               <img className="container-img" src={photo} alt="profile.jpg" />
 
               <div className="container-detail-1">
-                {/* <h1>{profile.firstName} {profile.lsatName}</h1> */}
                 <h1>
-                  {profile.firstName} <span>{profile.lastName}</span>
+                  {profile.firstName + " " + profile.lastName}
                 </h1>
                 <h4>{profile.email}</h4>
                 <h4>{profile.phone}</h4>
