@@ -2,7 +2,7 @@
 // import { useState, useRef } from "react";
 // import Input from "./Input/Input";
 // import "./Form.css";
-// import axios from "axios";
+import axios from "axios";
 // import { Navigate, useNavigate } from "react-router-dom";
 // import * as MdIcons from "react-icons/md";
 // import { FaListOl } from "react-icons/fa";
@@ -337,79 +337,154 @@
 
 // export default Form;
 
-import React, { useState } from 'react';
-import { Box, Heading, Input, Button, Flex, List, ListItem, Text, Spacer} from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
-import './Form.css';
+import React, { useState } from "react";
+import {
+  Box,
+  Heading,
+  Input,
+  Button,
+  Flex,
+  List,
+  ListItem,
+  Text,
+  Spacer,
+} from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
+import "./Form.css";
 
 function Form() {
-    const [file, setFile] = useState(null);
-    const [fileName, setFileName] = useState("No CV selected");
-    const [url, setUrl] = useState("");
-    const [urls, setUrls] = useState([]);
+  const [file, setFile] = useState(null);
+  const [fileName, setFileName] = useState("No CV selected");
+  const [url, setUrl] = useState("");
+  const [urls, setUrls] = useState([]);
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const handleFileChange = (e) => {
-        setFile(e.target.files[0]);
-        setFileName(e.target.files[0] ? e.target.files[0].name : "No CV selected");
-    }
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+    setFileName(e.target.files[0] ? e.target.files[0].name : "No CV selected");
+  };
 
-    const handleUrlChange = (e) => {
-        setUrl(e.target.value);
-    }
+  const handleUrlChange = (e) => {
+    setUrl(e.target.value);
+  };
 
-    const handleAddUrl = () => {
-        setUrls(prevUrls => [...prevUrls, url]);
-        setUrl(""); 
-    }
+  const handleAddUrl = () => {
+    setUrls((prevUrls) => [...prevUrls, url]);
+    setUrl("");
+  };
 
-    const handleSubmit = () => {
-        const userInfo = {
-            // Populate this with actual data
-        };
-  
-        navigate('/profile', { state: { userInfo } });
-    }
+  //   const handleSubmit = async (e) => {
+  //     const userInfo = {
+  //       // Populate this with actual data
+  //     };
+  //     navigate("/profile", { state: { userInfo } });
+  //   };
 
-    return (
-      <Flex
-        direction="column"
-        align="center"
-        justify="center"
-        height="100vh"
-        padding="20"
-      >
-        <Flex direction="row" justify="center" align="center" width="100%">
-          <Spacer />
-          <Box width="xl" borderWidth="1px" borderRadius="15px" padding="40" backgroundColor="#fff">
-            <Input type="file" hidden id="file-upload" onChange={handleFileChange} />
-            <Flex alignItems="center" marginBottom="20">
-              <Button as="label" htmlFor="file-upload" className="add-button">Add CV</Button>
-              <Text ml="10" mt="15">{fileName}</Text>
-            </Flex>
-            <Flex marginBottom="5">
-              <Input type="text" placeholder="Enter URL..." value={url} onChange={handleUrlChange} className="URLInput"/>
-              <Button className="add-button" onClick={handleAddUrl}>Add URL</Button>
-            </Flex>
-            <List spacing={3} mt="15">
-              {urls.map((url, index) => (
-                <ListItem key={index} className="list-item">• {url}</ListItem>
-              ))}
-            </List>
-            <Flex justifyContent="center" marginTop="30">
-              <Button className="generate-button" onClick={handleSubmit}>Generate Profile</Button>
-            </Flex>
-          </Box>
-          <Spacer />
-        </Flex>
+  let handleSubmit = async (e) => {
+    // e.preventDefault();
+    // console.log("submitted", formData);
+    e.preventDefault();
+    const account = localStorage.getItem("token");
+    let user = await axios.get("http://localhost:8000/api/auth/me", {
+      headers: {
+        Authorization: `Bearer ${account}`,
+      },
+    });
+    var data = JSON.stringify({
+      firstName: user.data.data.firstName,
+      lastName: user.data.data.lastName,
+      //   alternativeName: altNameList,
+      links: urls,
+    //   resume: resume,
+    //   photo: photo,
+      //   keywords: keywords,
+    });
+    var config = {
+      method: "post",
+      url: "http://localhost:8000/api/profiles",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${account}`,
+      },
+      data: data,
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        // if (photo == null) {
+        //   navigate("/Profile");
+        // } else {
+        //   singleFileUploadHandler(account, response.data.data._id);
+        // }
+        navigate("/profile");
+      })
+      .catch(function (error) {
+        console.log("post listing error: ", error.message);
+      });
+  };
+
+  return (
+    <Flex
+      direction="column"
+      align="center"
+      justify="center"
+      height="100vh"
+      padding="20"
+    >
+      <Flex direction="row" justify="center" align="center" width="100%">
+        <Spacer />
+        <Box
+          width="xl"
+          borderWidth="1px"
+          borderRadius="15px"
+          padding="40"
+          backgroundColor="#fff"
+        >
+          <Input
+            type="file"
+            hidden
+            id="file-upload"
+            onChange={handleFileChange}
+          />
+          <Flex alignItems="center" marginBottom="20">
+            <Button as="label" htmlFor="file-upload" className="add-button">
+              Add CV
+            </Button>
+            <Text ml="10" mt="15">
+              {fileName}
+            </Text>
+          </Flex>
+          <Flex marginBottom="5">
+            <Input
+              type="text"
+              placeholder="Enter URL..."
+              value={url}
+              onChange={handleUrlChange}
+              className="URLInput"
+            />
+            <Button className="add-button" onClick={handleAddUrl}>
+              Add URL
+            </Button>
+          </Flex>
+          <List spacing={3} mt="15">
+            {urls.map((url, index) => (
+              <ListItem key={index} className="list-item">
+                • {url}
+              </ListItem>
+            ))}
+          </List>
+          <Flex justifyContent="center" marginTop="30">
+            <Button className="generate-button" onClick={handleSubmit}>
+              Generate Profile
+            </Button>
+          </Flex>
+        </Box>
+        <Spacer />
       </Flex>
-    );
-    
-    
-    
-
-    
+    </Flex>
+  );
 }
 
 export default Form;

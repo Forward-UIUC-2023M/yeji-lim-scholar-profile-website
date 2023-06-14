@@ -25,9 +25,9 @@ function Profile() {
   const navigate = useNavigate();
 
   const [photo, setPhoto] = useState("");
-
   const defaultProfile = {
-    primaryName: "",
+    firstName: "",
+    lastName: "",
     keywords: [],
     email: "",
     phone: "",
@@ -44,6 +44,8 @@ function Profile() {
   const [updatedProfile, setUpdatedProfile] = useState(defaultProfile); // user's updated profile in inline edit or modal form control
 
   const [inlineEditMode, setInlineEditMode] = useState({
+    firstName: false,
+    lastName: false,
     basicInfo: false,
     honors: false,
     experiences: false,
@@ -262,7 +264,7 @@ function Profile() {
               Name:
               <Form.Control
                 type="text"
-                defaultValue={profile.primaryName}
+                defaultValue={profile.firstName}
                 placeholder="Name"
                 onChange={(e) =>
                   setUpdatedProfileField("primaryName", e.target.value)
@@ -361,11 +363,15 @@ function Profile() {
 
               <div className="container-detail-1">
                 <MultilineEdit
-                  placeholder="Name: "
-                  value={profile.primaryName}
-                  setValue={(value) =>
-                    setUpdatedProfileField("primaryName", value)
-                  }
+                  placeholder="First Name: "
+                  value={profile.firstName}
+                  setValue={(value) => setProfileField("firstName", value)}
+                  shouldFocus={true}
+                />
+                <MultilineEdit
+                  placeholder="Last Name: "
+                  value={profile.lastName}
+                  setValue={(value) => setProfileField("lastName", value)}
                   shouldFocus={true}
                 />
 
@@ -532,7 +538,10 @@ function Profile() {
               <img className="container-img" src={photo} alt="profile.jpg" />
 
               <div className="container-detail-1">
-                <h1>{profile.primaryName}</h1>
+                {/* <h1>{profile.firstName} {profile.lsatName}</h1> */}
+                <h1>
+                  {profile.firstName} <span>{profile.lastName}</span>
+                </h1>
                 <h4>{profile.email}</h4>
                 <h4>{profile.phone}</h4>
               </div>
