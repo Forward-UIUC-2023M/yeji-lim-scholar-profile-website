@@ -1,0 +1,18 @@
+.search-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50vh;
+}
+
+.search-listGroup-item {
+    display: flex;
+    flex-direction: column;
+    width: 80vw;
+    background-color: #edf1ff;
+    border-color: #edf1ff;
+}
+
+.starr {
+    align-self: auto;
+}

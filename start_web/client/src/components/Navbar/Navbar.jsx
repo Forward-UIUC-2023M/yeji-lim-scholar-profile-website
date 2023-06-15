@@ -46,6 +46,11 @@ function Navbar() {
                 </Link>
               </li>
               <li>
+                <Link className="nav-links" to="/search">
+                  Search
+                </Link>
+              </li>
+              <li>
                 <Link className="nav-links" onClick={logout} to={"/"}>
                   Log Out
                 </Link>
