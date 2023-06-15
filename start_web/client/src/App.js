@@ -2,6 +2,7 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Profile from "./components/Profile/Profile";
+import Search from "./components/Search/Search";
 import Form from "./components/Form/Form";
 import Navbar from "./components/Navbar/Navbar";
 import About from "./components/About/About";
@@ -17,6 +18,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/search" element={<Search />} />
           <Route path="/form" element={<Form />} />
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
