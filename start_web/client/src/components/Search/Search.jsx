@@ -1,4 +1,54 @@
-import React, { useState, useEffect } from "react";
+// import React, { useState, useEffect } from "react";
+// import {
+//   Button,
+//   InputGroup,
+//   ListGroup,
+//   Form,
+//   Container,
+//   Row,
+//   Col,
+// } from "react-bootstrap";
+// import { BsSearch } from "react-icons/bs";
+// import { AiOutlineStar, AiFillStar } from "react-icons/ai";
+// import "./Search.css";
+
+// function Search() {
+//   const [profiles, setProfiles] = useState([]);
+//   // TODO: should fetch subscribed from the backend
+//   const [subscribed, setSubscribed] = useState(false);
+
+//   const b1 = {
+//     firstName: "Edison",
+//     lastName: "Yin",
+//     institution: "UIUC",
+//     links: ["google.com", "apple.com", "yahoo.com"],
+//     keywords: ["Computer Science", "Frontend Developer"],
+//   };
+//   const b2 = {
+//     firstName: "Amy",
+//     lastName: "Lay",
+//     institution: "UIUC",
+//     links: ["google.com", "apple.com", "yahoo.com"],
+//     keywords: ["Computer Science", "Frontend Developer"],
+//   };
+//   const b3 = {
+//     firstName: "John",
+//     lastName: "Musk",
+//     institution: "UIUC",
+//     links: ["google.com", "apple.com", "yahoo.com"],
+//     keywords: ["Computer Science", "Frontend Developer"],
+//   };
+
+//   // handle subscription of profiles
+//   const handleSubscribe = () => {
+//     setSubscribed(!subscribed);
+//   };
+
+//   useEffect(() => {
+//     setProfiles([b1, b2, b3]);
+//   }, []);
+
+import React, { useState } from "react";
 import {
   Button,
   InputGroup,
@@ -10,43 +60,28 @@ import {
 } from "react-bootstrap";
 import { BsSearch } from "react-icons/bs";
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
+import axios from "axios"; 
 import "./Search.css";
 
 function Search() {
   const [profiles, setProfiles] = useState([]);
-  // TODO: should fetch subscribed from the backend
+  const [searchTerm, setSearchTerm] = useState("");
   const [subscribed, setSubscribed] = useState(false);
 
-  const b1 = {
-    firstName: "Edison",
-    lastName: "Yin",
-    institution: "UIUC",
-    links: ["google.com", "apple.com", "yahoo.com"],
-    keywords: ["Computer Science", "Frontend Developer"],
-  };
-  const b2 = {
-    firstName: "Amy",
-    lastName: "Lay",
-    institution: "UIUC",
-    links: ["google.com", "apple.com", "yahoo.com"],
-    keywords: ["Computer Science", "Frontend Developer"],
-  };
-  const b3 = {
-    firstName: "John",
-    lastName: "Musk",
-    institution: "UIUC",
-    links: ["google.com", "apple.com", "yahoo.com"],
-    keywords: ["Computer Science", "Frontend Developer"],
-  };
-
-  // handle subscription of profiles
   const handleSubscribe = () => {
     setSubscribed(!subscribed);
   };
 
-  useEffect(() => {
-    setProfiles([b1, b2, b3]);
-  }, []);
+  const handleSearch = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await axios.get(`http://localhost:8000/api/profiles/search?q=${searchTerm}`);
+      console.log(response.data);
+      setProfiles(response.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }; 
 
   return (
     <div>
@@ -64,8 +99,9 @@ function Search() {
                 style={{ width: "50vw" }}
                 aria-label="Search"
                 maxLength={80}
+                onChange={event => setSearchTerm(event.target.value)}
               />
-              <Button type="submit">Search</Button>
+              <Button type="submit" onClick={handleSearch}>Search</Button>
             </Form>
           </Col>
         </Row>
