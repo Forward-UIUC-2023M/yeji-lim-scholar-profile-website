@@ -66,7 +66,7 @@ function Navbar() {
           ) : (
             <>
               <li>
-                <Link className="nav-links" to="/">
+                <Link className="nav-links" to="/search">
                   Search
                 </Link>
               </li>
