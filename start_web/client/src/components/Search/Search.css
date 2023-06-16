@@ -1,22 +1,3 @@
-/* .search-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 50vh;
-}
-
-.search-listGroup-item {
-    display: flex;
-    flex-direction: column;
-    width: 80vw;
-    background-color: #edf1ff;
-    border-color: #edf1ff;
-}
-
-.starr {
-    align-self: auto;
-} */
-
 .search-container {
     display: flex;
     align-items: center;
@@ -31,6 +12,16 @@
 
 .round-circle.after-search {
     margin-top: 50px; 
+}
+
+.search-icon {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.search-bar {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }
 
 .search-listGroup-item {
