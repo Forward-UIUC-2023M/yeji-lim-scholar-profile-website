@@ -66,13 +66,15 @@ function Search() {
         {profiles.map((profile, profile_index) => (
           <ListGroup.Item
             key={profile_index}
-            className="rounded mb-5 search-listGroup-item round-circle"
+            className="rounded mb-4 search-listGroup-item round-circle"
           >
             <div className="d-flex justify-content-between">
               <div className="d-flex flex-column">
-                <h5 className="mt-3">Profile #{profile_index + 1}</h5>
+                <h5 className="mt-2" style={{ fontWeight: "bold" }}>
+                  {profile.firstName && profile.lastName ? profile.firstName + " " + profile.lastName + ", " + profile.institution : profile.primaryName + ", " + profile.institution}&nbsp;
+                </h5>
 
-                <div className="d-flex">
+                {/* <div className="d-flex">
                   <h6 className="mt-3" style={{ fontWeight: "bold" }}>
                     {profile.firstName + " " + profile.lastName + ","}&nbsp;
                   </h6>
@@ -80,7 +82,7 @@ function Search() {
                   <h6 className="mt-3" style={{ fontWeight: "bold" }}>
                     {profile.institution}
                   </h6>
-                </div>
+                </div> */}
 
                 <div className="d-flex">
                   <h6 className="text-warning">Links:&nbsp;</h6>
