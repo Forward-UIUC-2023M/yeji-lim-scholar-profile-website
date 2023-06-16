@@ -29,6 +29,7 @@ connectDB();
 const auth = require("./routes/auth");
 const profiles = require("./routes/profiles");
 const photo = require("./routes/photo");
+const form = require("./routes/form");
 
 // Cookie parser
 app.use(cookieParser());
@@ -42,6 +43,7 @@ if (process.env.NODE_ENV === "development") {
 app.use("/api/auth", auth);
 app.use("/api/profiles", profiles);
 app.use("/api/photo", photo);
+app.use("/api/forms", form);
 
 const PORT = process.env.PORT || 3000;
 
