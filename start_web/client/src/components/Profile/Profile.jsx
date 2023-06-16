@@ -1,14 +1,11 @@
 // import React from "react";
 import React from "react";
-import Navbar from "../Navbar/Navbar";
-import Sidebar from "../Sidebar/Sidebar";
 import MultilineEdit from "./MultilineEdit";
 import "./Profile.css";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import { Link, Navigate, useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import * as FiIcons from "react-icons/fi";
-import { IconContext } from "react-icons";
 import {
   BiEdit,
   BiCheckSquare,
