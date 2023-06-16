@@ -238,7 +238,9 @@ function Register() {
             /> */}
               </div>
               <div className="register-photo-container">
-                <label for="photo" className="profile-photo-label">Profile Photo</label>
+                <label for="photo" className="profile-photo-label">
+                  Profile Photo
+                </label>
                 <input
                   type="file"
                   name="profilePhoto"

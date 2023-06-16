@@ -413,15 +413,101 @@ function Form() {
     axios(config)
       .then(function (response) {
         console.log(JSON.stringify(response.data));
+        formUploadHandler(account, response.data.data._id);
         // if (photo == null) {
         //   navigate("/Profile");
         // } else {
         //   singleFileUploadHandler(account, response.data.data._id);
         // }
-        navigate("/profile");
+        // navigate("/profile");
       })
       .catch(function (error) {
         console.log("post listing error: ", error.message);
+      });
+  };
+
+  const formUploadHandler = async (account, id) => {
+    var data = JSON.stringify({
+      links: urls,
+    });
+    var config = {
+      method: "post",
+      url: "http://localhost:8000/api/forms",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${account}`,
+      },
+      data: data,
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        // formUploadHandler(account, response.data.data._id);
+        // if (photo == null) {
+        //   navigate("/Profile");
+        // } else {
+        singleFileUploadHandler(account, response.data.data._id);
+        // }
+        // navigate("/profile");
+      })
+      .catch(function (error) {
+        console.log("post listing error: ", error.message);
+      });
+  };
+
+  const singleFileUploadHandler = async (account, id) => {
+    console.log("singleFileUploadHandler");
+    const data = new FormData();
+
+    // If file selected
+    if (file) {
+      data.append("itemImage", file, file.name);
+      var config = {
+        method: "post",
+        url: "http://localhost:8000/api/photo",
+        headers: {
+          accept: "application/json",
+          "Accept-Language": "en-US,en;q=0.8",
+          "Content-Type": `multipart/form-data; boundary=${data._boundary}`,
+          Authorization: `Bearer ${account}`,
+        },
+        data: data,
+      };
+
+      await axios(config)
+        .then(function (response) {
+          console.log("profile form photo data", JSON.stringify(response.data));
+          updateFormPhoto(account, id, response);
+        })
+        .catch(function (error) {
+          console.log("post photo error: ", error.message);
+        });
+    }
+  };
+
+  const updateFormPhoto = async (account, id, file) => {
+    console.log("updateFormPhoto");
+    var data = JSON.stringify({
+      resume: file.data.location,
+    });
+    var config = {
+      method: "put",
+      url: `http://localhost:8000/api/forms/${id}`,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${account}`,
+      },
+      data: data,
+    };
+
+    await axios(config)
+      .then(function (response) {
+        console.log("put photo", response);
+        navigate("/profile");
+      })
+      .catch(function (error) {
+        console.log(error);
       });
   };
 

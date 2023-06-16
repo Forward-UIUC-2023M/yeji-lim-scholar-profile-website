@@ -26,7 +26,7 @@ function Navbar() {
           ForwardData
         </Link>
         <ul className="navbar-menu">
-          {NavItems.map((item, index) => {
+          {/* {NavItems.map((item, index) => {
             return (
               <li key={index}>
                 <a className={item.cName} href={item.url}>
@@ -34,7 +34,7 @@ function Navbar() {
                 </a>
               </li>
             );
-          })}
+          })} */}
           {auth ? (
             <>
               <li>
@@ -48,6 +48,16 @@ function Navbar() {
                 </Link>
               </li>
               <li>
+                <Link className="nav-links" to="/">
+                  Explore
+                </Link>
+              </li>
+              <li>
+                <Link className="nav-links" to="/profile">
+                  Favorites
+                </Link>
+              </li>
+              <li>
                 <Link className="nav-links" onClick={logout} to={"/"}>
                   Log Out
                 </Link>
@@ -55,6 +65,11 @@ function Navbar() {
             </>
           ) : (
             <>
+              <li>
+                <Link className="nav-links" to="/">
+                  Search
+                </Link>
+              </li>
               <li>
                 <Link className="nav-links" to="/register">
                   Register
