@@ -396,8 +396,8 @@ function Form() {
       lastName: user.data.data.lastName,
       //   alternativeName: altNameList,
       links: urls,
-    //   resume: resume,
-    //   photo: photo,
+      //   resume: resume,
+      //   photo: photo,
       //   keywords: keywords,
     });
     var config = {

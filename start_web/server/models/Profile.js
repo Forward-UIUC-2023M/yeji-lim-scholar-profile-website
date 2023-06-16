@@ -4,9 +4,9 @@ const Profiles = require("./Profile");
 const ProfilesSchema = mongoose.Schema({
   firstName: String,
   lastName: String,
-  links:{
+  links: {
     type: [String],
-  }, 
+  },
   keywords: {
     type: [String],
     // default: ["no keywords"],

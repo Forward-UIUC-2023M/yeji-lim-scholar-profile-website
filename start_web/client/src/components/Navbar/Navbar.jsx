@@ -1,11 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import * as FaIcons from "react-icons/fa";
-import * as HiIcons from "react-icons/hi";
-import * as AiIcons from "react-icons/ai";
 import { NavItems } from "./NavItems";
 import { SidebarItems } from "../Sidebar/SidebarItems";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./Navbar.css";
 
 function Navbar() {
