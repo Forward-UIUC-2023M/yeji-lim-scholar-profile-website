@@ -187,3 +187,29 @@ exports.deleteProfile = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({ success: true, data: profile });
 });
+
+// @desc      Search profiles
+// @route     Get /api/profiles/search
+// @access    Private
+exports.searchProfiles = asyncHandler(async (req, res, next) => {
+  // Extract search query from request
+  const { q } = req.query;
+
+  // Search in firstName, lastName, and institution fields
+  const query = {
+    $or: [
+      { firstName: { $regex: q, $options: "i" } },
+      { lastName: { $regex: q, $options: "i" } },
+      { primaryName: { $regex: q, $options: "i" } },
+      { institution: { $regex: q, $options: "i" } }
+    ]
+  };
+
+  // Execute the query
+  const profiles = await Profile.find(query);
+  
+  // Respond with the search results
+  res.status(200).json({ success: true, data: profiles });
+});
+
+
