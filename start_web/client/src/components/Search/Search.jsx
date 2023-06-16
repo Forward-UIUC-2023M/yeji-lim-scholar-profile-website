@@ -1,53 +1,3 @@
-// import React, { useState, useEffect } from "react";
-// import {
-//   Button,
-//   InputGroup,
-//   ListGroup,
-//   Form,
-//   Container,
-//   Row,
-//   Col,
-// } from "react-bootstrap";
-// import { BsSearch } from "react-icons/bs";
-// import { AiOutlineStar, AiFillStar } from "react-icons/ai";
-// import "./Search.css";
-
-// function Search() {
-//   const [profiles, setProfiles] = useState([]);
-//   // TODO: should fetch subscribed from the backend
-//   const [subscribed, setSubscribed] = useState(false);
-
-//   const b1 = {
-//     firstName: "Edison",
-//     lastName: "Yin",
-//     institution: "UIUC",
-//     links: ["google.com", "apple.com", "yahoo.com"],
-//     keywords: ["Computer Science", "Frontend Developer"],
-//   };
-//   const b2 = {
-//     firstName: "Amy",
-//     lastName: "Lay",
-//     institution: "UIUC",
-//     links: ["google.com", "apple.com", "yahoo.com"],
-//     keywords: ["Computer Science", "Frontend Developer"],
-//   };
-//   const b3 = {
-//     firstName: "John",
-//     lastName: "Musk",
-//     institution: "UIUC",
-//     links: ["google.com", "apple.com", "yahoo.com"],
-//     keywords: ["Computer Science", "Frontend Developer"],
-//   };
-
-//   // handle subscription of profiles
-//   const handleSubscribe = () => {
-//     setSubscribed(!subscribed);
-//   };
-
-//   useEffect(() => {
-//     setProfiles([b1, b2, b3]);
-//   }, []);
-
 import React, { useState } from "react";
 import {
   Button,
@@ -67,6 +17,7 @@ function Search() {
   const [profiles, setProfiles] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [subscribed, setSubscribed] = useState(false);
+  const [searchPerformed, setSearchPerformed] = useState(false);
 
   const handleSubscribe = () => {
     setSubscribed(!subscribed);
@@ -74,6 +25,7 @@ function Search() {
 
   const handleSearch = async (event) => {
     event.preventDefault();
+    setSearchPerformed(true);
     try {
       const response = await axios.get(`http://localhost:8000/api/profiles/search?q=${searchTerm}`);
       console.log(response.data);
@@ -85,7 +37,7 @@ function Search() {
 
   return (
     <div>
-      <Container className="mt-5 search-container">
+      <Container className={searchPerformed ? "mt-5 search-container after-search" : "mt-5 search-container"}>
         <Row>
           <Col>
             <Form className="d-flex">
@@ -108,7 +60,7 @@ function Search() {
       </Container>
 
       <ListGroup
-        className="align-items-center round-circle"
+        className={searchPerformed ? "align-items-center round-circle after-search" : "align-items-center round-circle"}
         style={{ borderRadius: "30%" }}
       >
         {profiles.map((profile, profile_index) => (
@@ -177,3 +129,4 @@ function Search() {
 }
 
 export default Search;
+
