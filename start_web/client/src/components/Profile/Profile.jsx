@@ -20,7 +20,7 @@ import { Button, Dropdown, Modal, Form } from "react-bootstrap";
 
 function Profile() {
   const navigate = useNavigate();
-
+  const [profileId, setProfileId] = useState("");
   const [photo, setPhoto] = useState("");
   const defaultProfile = {
     firstName: "",
@@ -32,6 +32,7 @@ function Profile() {
     titles: [],
     major: "",
     focusAreas: [],
+    educations: [],
     honors: [],
     experiences: [],
     papers: [],
@@ -174,6 +175,8 @@ function Profile() {
       ...prevEditingStates,
       [fieldName]: false,
     }));
+
+    updateBackend();
   };
 
   // set field in inlineEditMode to be true when the user clicks on edit buttons
@@ -195,14 +198,53 @@ function Profile() {
   };
 
   // set profile to be the updated version and then close the modal
-  const handleSaveModalEdit = (fieldName) => {
+  const handleSaveModalEdit = async (fieldName) => {
     setProfile(updatedProfile);
 
     setModalEditMode((prevEditingStates) => ({
       ...prevEditingStates,
       [fieldName]: false,
     }));
+
+    updateBackend();
   };
+
+  const updateBackend = async () => {
+    const account = localStorage.getItem("token");
+    console.log("updated profile: ", updatedProfile);
+    var data = JSON.stringify({
+      firstName: updatedProfile.firstName,
+      lastName: updatedProfile.lastName,
+      keywords: updatedProfile.keywords,
+      email: updatedProfile.email,
+      phone: updatedProfile.phone,
+      institution: updatedProfile.institution,
+      titles: updatedProfile.titles,
+      major: updatedProfile.major,
+      focusAreas: updatedProfile.focusAreas,
+      educations: updatedProfile.educations,
+      honors: updatedProfile.honors,
+      experiences: updatedProfile.experiences,
+      papers: updatedProfile.papers,
+    });
+    var config = {
+      method: "put",
+      url: `http://localhost:8000/api/profiles/${profileId}`,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${account}`,
+      },
+      data: data,
+    };
+
+    await axios(config)
+      .then(function (response) {
+        console.log("updateProfile", response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
 
   const handleAddTitle = () => {};
 
@@ -228,6 +270,8 @@ function Profile() {
         const profile_to_set = await data.data.filter(
           (prof) => prof.user === user.data.data._id
         );
+          console.log("prof to se idt: ", profile_to_set[0]._id);
+        setProfileId(profile_to_set[0]._id);
 
         setProfile(profile_to_set[0]);
         setUpdatedProfile(profile_to_set[0]);
