@@ -208,7 +208,7 @@ exports.searchProfiles = asyncHandler(async (req, res, next) => {
 
   // Execute the query
   const profiles = await Profile.find(query);
-  
+
   // Respond with the search results
   res.status(200).json({ success: true, data: profiles });
 });
@@ -219,7 +219,7 @@ exports.searchProfiles = asyncHandler(async (req, res, next) => {
 exports.favoriteProfile = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.user.id);
   const profile = await Profile.findById(req.params.id);
-  
+
   if (!user || !profile) {
     return next(new ErrorResponse(`No user or profile found`, 404));
   }
@@ -230,7 +230,7 @@ exports.favoriteProfile = asyncHandler(async (req, res, next) => {
   } else {
     user.favorites.push(profile._id);
   }
-  
+
   await user.save();
 
   res.status(200).json({ success: true, data: user });
@@ -241,7 +241,7 @@ exports.favoriteProfile = asyncHandler(async (req, res, next) => {
 // @access  Private
 exports.getFavoritedProfiles = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.user.id).select('favorites');
-  
+
   if (!user) {
     return next(new ErrorResponse('No user found', 404));
   }

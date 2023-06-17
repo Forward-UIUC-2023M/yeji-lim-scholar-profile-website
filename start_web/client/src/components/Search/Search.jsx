@@ -22,28 +22,30 @@ function Search() {
 
   const handleSubscribe = async (profileId) => {
     try {
-      const token = localStorage.getItem('token'); 
+      const token = localStorage.getItem("token");
       const response = await axios.post(
         `http://localhost:8000/api/profiles/${profileId}/favorite`,
         {},
-        { 
+        {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       console.log(response.data);
-      
+
       // Toggle the favorited status of the profile in state
-      setProfiles(profiles.map(profile => 
-        profile._id === profileId 
-          ? { ...profile, favorited: !profile.favorited } 
-          : profile
-      ));
+      setProfiles(
+        profiles.map((profile) =>
+          profile._id === profileId
+            ? { ...profile, favorited: !profile.favorited }
+            : profile
+        )
+      );
     } catch (error) {
       console.log(error);
     }
-  };  
+  };
 
   const handleSearch = async (event) => {
     event.preventDefault();
@@ -52,28 +54,31 @@ function Search() {
       const profilesResponse = await axios.get(
         `http://localhost:8000/api/profiles/search?q=${searchTerm}`
       );
-  
-      const token = localStorage.getItem('token'); 
+
+      const token = localStorage.getItem("token");
       const favoritesResponse = await axios.get(
-        'http://localhost:8000/api/profiles/favorited',
-        { 
+        "http://localhost:8000/api/profiles/favorited",
+        {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
-  
-      const favoritedProfileIds = new Set(favoritesResponse.data.data.map(id => id.toString()));
-  
-      setProfiles(profilesResponse.data.data.map(profile => ({
-        ...profile, 
-        favorited: favoritedProfileIds.has(profile._id)
-      })));
+
+      const favoritedProfileIds = new Set(
+        favoritesResponse.data.data.map((id) => id.toString())
+      );
+
+      setProfiles(
+        profilesResponse.data.data.map((profile) => ({
+          ...profile,
+          favorited: favoritedProfileIds.has(profile._id),
+        }))
+      );
     } catch (error) {
       console.log(error);
     }
   };
-  
 
   return (
     <div>
@@ -110,15 +115,15 @@ function Search() {
       <ListGroup
         className={
           searchPerformed
-            ? "align-items-center round-circle after-search"
-            : "align-items-center round-circle"
+            ? "align-items-center after-search"
+            : "align-items-center"
         }
         style={{ borderRadius: "30%" }}
       >
         {profiles.map((profile, profile_index) => (
           <ListGroup.Item
             key={profile_index}
-            className="rounded mb-4 search-listGroup-item round-circle"
+            className="rounded mb-4 search-listGroup-item"
           >
             <div className="d-flex justify-content-between">
               <div className="d-flex flex-column">
@@ -187,14 +192,17 @@ function Search() {
               {profile.favorited ? (
                 <div className="align-self-center">
                   <AiFillStar
+                    size={25}
                     color="orange"
-                    className="starr"
                     onClick={() => handleSubscribe(profile._id)}
                   />
                 </div>
               ) : (
                 <div className="align-self-center">
-                  <AiOutlineStar className="starr" onClick={() => handleSubscribe(profile._id)} />
+                  <AiOutlineStar
+                    size={25}
+                    onClick={() => handleSubscribe(profile._id)}
+                  />
                 </div>
               )}
             </div>
