@@ -31,6 +31,7 @@
   /* font-weight: 700; */
   cursor: pointer;
   border-radius: 30px;
+  margin-right: 7px;
 }
 
 .login {
@@ -51,4 +52,5 @@
     /* font-weight: 700; */
     cursor: pointer;
     border-radius: 30px;
+    margin-right: 7px;
   }
