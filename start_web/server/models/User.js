@@ -40,6 +40,11 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: "no-photo.jpg",
   },
+  // favorites array
+  favorites: [{
+    type: mongoose.Schema.ObjectId,
+    ref: 'Profiles',
+  }],
 });
 
 // Encrypt password using bcrypt

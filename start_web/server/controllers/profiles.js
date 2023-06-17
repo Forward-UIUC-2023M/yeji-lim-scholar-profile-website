@@ -2,6 +2,7 @@ const path = require("path");
 const ErrorResponse = require("../utils/errorResponse");
 const asyncHandler = require("../middleware/async");
 const Profile = require("../models/Profile");
+const User = require('../models/User');
 
 // @desc      Get all profiles
 // @route     Get /api/profiles
@@ -211,5 +212,43 @@ exports.searchProfiles = asyncHandler(async (req, res, next) => {
   // Respond with the search results
   res.status(200).json({ success: true, data: profiles });
 });
+
+// @desc    Favorite or unfavorite a profile
+// @route   POST/DELETE /api/profiles/:id/favorite
+// @access  Private
+exports.favoriteProfile = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+  const profile = await Profile.findById(req.params.id);
+  
+  if (!user || !profile) {
+    return next(new ErrorResponse(`No user or profile found`, 404));
+  }
+
+  // If the profile is already favorited, unfavorite it. Otherwise, favorite it
+  if (user.favorites.includes(profile._id)) {
+    user.favorites = user.favorites.filter(id => !id.equals(profile._id));
+  } else {
+    user.favorites.push(profile._id);
+  }
+  
+  await user.save();
+
+  res.status(200).json({ success: true, data: user });
+});
+
+// @desc    Get IDs of profiles favorited by the user
+// @route   GET /api/profiles/favorited
+// @access  Private
+exports.getFavoritedProfiles = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id).select('favorites');
+  
+  if (!user) {
+    return next(new ErrorResponse('No user found', 404));
+  }
+
+  res.status(200).json({ success: true, data: user.favorites });
+});
+
+
 
 
