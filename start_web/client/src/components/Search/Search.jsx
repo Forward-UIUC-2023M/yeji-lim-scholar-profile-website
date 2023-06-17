@@ -17,26 +17,63 @@ function Search() {
   const MAX_LENGTH = 5; // maximum number of links or keywords displayed
   const [profiles, setProfiles] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [subscribed, setSubscribed] = useState(false);
+  // const [subscribed, setSubscribed] = useState(false);
   const [searchPerformed, setSearchPerformed] = useState(false);
 
-  const handleSubscribe = () => {
-    setSubscribed(!subscribed);
-  };
+  const handleSubscribe = async (profileId) => {
+    try {
+      const token = localStorage.getItem('token'); 
+      const response = await axios.post(
+        `http://localhost:8000/api/profiles/${profileId}/favorite`,
+        {},
+        { 
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      console.log(response.data);
+      
+      // Toggle the favorited status of the profile in state
+      setProfiles(profiles.map(profile => 
+        profile._id === profileId 
+          ? { ...profile, favorited: !profile.favorited } 
+          : profile
+      ));
+    } catch (error) {
+      console.log(error);
+    }
+  };  
 
   const handleSearch = async (event) => {
     event.preventDefault();
     setSearchPerformed(true);
     try {
-      const response = await axios.get(
+      const profilesResponse = await axios.get(
         `http://localhost:8000/api/profiles/search?q=${searchTerm}`
       );
-      console.log(response.data);
-      setProfiles(response.data.data);
+  
+      const token = localStorage.getItem('token'); 
+      const favoritesResponse = await axios.get(
+        'http://localhost:8000/api/profiles/favorited',
+        { 
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+  
+      const favoritedProfileIds = new Set(favoritesResponse.data.data.map(id => id.toString()));
+  
+      setProfiles(profilesResponse.data.data.map(profile => ({
+        ...profile, 
+        favorited: favoritedProfileIds.has(profile._id)
+      })));
     } catch (error) {
       console.log(error);
     }
   };
+  
 
   return (
     <div>
@@ -147,17 +184,17 @@ function Search() {
                 </div>
               </div>
 
-              {subscribed ? (
+              {profile.favorited ? (
                 <div className="align-self-center">
                   <AiFillStar
                     color="orange"
                     className="starr"
-                    onClick={handleSubscribe}
+                    onClick={() => handleSubscribe(profile._id)}
                   />
                 </div>
               ) : (
                 <div className="align-self-center">
-                  <AiOutlineStar className="starr" onClick={handleSubscribe} />
+                  <AiOutlineStar className="starr" onClick={() => handleSubscribe(profile._id)} />
                 </div>
               )}
             </div>
