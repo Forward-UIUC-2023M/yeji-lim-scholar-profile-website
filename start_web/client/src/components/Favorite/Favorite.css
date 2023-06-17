@@ -1,0 +1,7 @@
+.favorite-listGroup-item {
+    display: flex;
+    flex-direction: column;
+    width: 80vw;
+    background-color: #edf1ff;
+    border-color: #edf1ff;
+}
