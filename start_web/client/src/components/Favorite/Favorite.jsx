@@ -1,26 +1,15 @@
-import React, { useState } from "react";
-import {
-  Button,
-  InputGroup,
-  ListGroup,
-  Form,
-  Container,
-  Row,
-  Col,
-} from "react-bootstrap";
-import { BsSearch } from "react-icons/bs";
+import React, { useEffect, useState } from "react";
+import { ListGroup } from "react-bootstrap";
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 import axios from "axios";
-import "./Search.css";
+import "./Favorite.css";
 
-function Search() {
+function Favorite() {
   const MAX_LENGTH = 5; // maximum number of links or keywords displayed
-  const [profiles, setProfiles] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  // const [subscribed, setSubscribed] = useState(false);
-  const [searchPerformed, setSearchPerformed] = useState(false);
+  const [favoriteProfiles, setFavoriteProfiles] = useState([]); // list of favorite profiles
+  const [profileFavoritedList, setProfileFavoritedList] = useState([]); // list of bools that determines whether the given profile is favorited
 
-  const handleSubscribe = async (profileId) => {
+  const handleSubscribe = async (profileId, index) => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
@@ -35,26 +24,17 @@ function Search() {
       console.log(response.data);
 
       // Toggle the favorited status of the profile in state
-      setProfiles(
-        profiles.map((profile) =>
-          profile._id === profileId
-            ? { ...profile, favorited: !profile.favorited }
-            : profile
-        )
-      );
+      setProfileFavoritedList((prev) => ({
+        ...prev,
+        [index]: !profileFavoritedList[index],
+      }));
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleSearch = async (event) => {
-    event.preventDefault();
-    setSearchPerformed(true);
+  const handleShowFavorites = async () => {
     try {
-      const profilesResponse = await axios.get(
-        `http://localhost:8000/api/profiles/search?q=${searchTerm}`
-      );
-
       const token = localStorage.getItem("token");
       const favoritesResponse = await axios.get(
         "http://localhost:8000/api/profiles/favorited",
@@ -69,61 +49,44 @@ function Search() {
         favoritesResponse.data.data.map((id) => id.toString())
       );
 
-      setProfiles(
-        profilesResponse.data.data.map((profile) => ({
-          ...profile,
-          favorited: favoritedProfileIds.has(profile._id),
-        }))
+      const favoriteProfileList = await Promise.all(
+        Array.from(favoritedProfileIds).map(async (favoritedProfileId) => {
+          const favoriteProfile = await axios.get(
+            `http://localhost:8000/api/profiles/${favoritedProfileId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          return favoriteProfile.data.data;
+        })
       );
+
+      setFavoriteProfiles(favoriteProfileList);
+      setProfileFavoritedList(
+        favoriteProfileList.map((_, index) => ({ [index]: true }))
+      ); // set initial favorite list to all trues since it's the favorite page
     } catch (error) {
       console.log(error);
     }
   };
 
+  useEffect(() => {
+    setFavoriteProfiles([]);
+    handleShowFavorites();
+    favoriteProfiles.map((favoriteProfile, index) =>
+      console.log(favoriteProfile)
+    );
+  }, []);
+
   return (
     <div>
-      <Container
-        className={
-          searchPerformed
-            ? "mt-5 search-container after-search"
-            : "mt-5 search-container"
-        }
-      >
-        <Row>
-          <Col>
-            <Form className="d-flex">
-              <InputGroup.Text className="bg-white search-icon">
-                <BsSearch />
-              </InputGroup.Text>
-              <Form.Control
-                type="search"
-                placeholder="Search"
-                className="me-2 search-bar"
-                style={{ width: "50vw" }}
-                aria-label="Search"
-                maxLength={80}
-                onChange={(event) => setSearchTerm(event.target.value)}
-              />
-              <Button type="submit" onClick={handleSearch}>
-                Search
-              </Button>
-            </Form>
-          </Col>
-        </Row>
-      </Container>
-
-      <ListGroup
-        className={
-          searchPerformed
-            ? "align-items-center after-search"
-            : "align-items-center"
-        }
-        style={{ borderRadius: "30%" }}
-      >
-        {profiles.map((profile, profile_index) => (
+      <ListGroup className="mt-5 align-items-center">
+        {favoriteProfiles.map((profile, index) => (
           <ListGroup.Item
-            key={profile_index}
-            className="rounded mb-4 search-listGroup-item"
+            key={index}
+            className="rounded mb-4 favorite-listGroup-item round-circle"
           >
             <div className="d-flex justify-content-between">
               <div className="d-flex flex-column">
@@ -189,19 +152,19 @@ function Search() {
                 </div>
               </div>
 
-              {profile.favorited ? (
+              {profileFavoritedList[index] ? (
                 <div className="align-self-center">
                   <AiFillStar
                     size={25}
                     color="orange"
-                    onClick={() => handleSubscribe(profile._id)}
+                    onClick={() => handleSubscribe(profile._id, index)}
                   />
                 </div>
               ) : (
                 <div className="align-self-center">
                   <AiOutlineStar
                     size={25}
-                    onClick={() => handleSubscribe(profile._id)}
+                    onClick={() => handleSubscribe(profile._id, index)}
                   />
                 </div>
               )}
@@ -213,4 +176,4 @@ function Search() {
   );
 }
 
-export default Search;
+export default Favorite;

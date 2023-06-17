@@ -53,7 +53,7 @@ function Navbar() {
                 </Link>
               </li>
               <li>
-                <Link className="nav-links" to="/profile">
+                <Link className="nav-links" to="/favorite">
                   Favorites
                 </Link>
               </li>
