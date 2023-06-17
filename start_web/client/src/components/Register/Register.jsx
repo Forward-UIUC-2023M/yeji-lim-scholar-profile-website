@@ -14,7 +14,7 @@ function Register() {
   });
   const [photo, setPhoto] = useState();
 
-  const { firstName, lastName, email, password } = formData;
+  const { firstName, lastName, email, password, confirm_password } = formData;
 
   const onChange = async (e) => {
     e.preventDefault();
@@ -48,6 +48,18 @@ function Register() {
       setPasswordError("");
     } else {
       setPasswordError("Password must contain at least 6 characters.");
+    }
+    onChange(e);
+  };
+
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const confirmPassword = (e) => {
+    var confirm = e.target.value;
+
+    if (confirm === password) {
+      setConfirmPasswordError("");
+    } else {
+      setConfirmPasswordError("Password does not match.");
     }
     onChange(e);
   };
@@ -225,6 +237,25 @@ function Register() {
                     }}
                   >
                     {passwordError}
+                  </div>
+                </div>
+                
+                <input
+                  type="password"
+                  className="register-confirm-password"
+                  placeholder="Confirm Password"
+                  id="confirm-password"
+                  value={confirm_password}
+                  onChange={(e) => confirmPassword(e)}
+                />
+                <div>
+                  <div
+                    className="register-error"
+                    style={{
+                      color: "red",
+                    }}
+                  >
+                    {confirmPasswordError}
                   </div>
                 </div>
                 {/* <h5 className="register-input"> Password </h5>

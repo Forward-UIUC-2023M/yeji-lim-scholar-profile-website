@@ -3,7 +3,7 @@
   background-color: #fff;
   text-align: center;
   margin: auto;
-  margin-top: 180px;
+  margin-top: 8%;
   padding: auto;
   padding-top: 40px;
   padding-bottom: 40px;
@@ -31,7 +31,7 @@
 
 .register-name {
   margin: auto;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
   /* margin-bottom: px; */
   padding: 7px 7px 7px 7px;
   box-sizing: border-box;
@@ -45,7 +45,7 @@
 .register-email {
   margin: auto;
   /* margin-bottom: 30px; */
-  margin-bottom: 10px;
+  margin-bottom: 0px;
   padding: 7px 7px 7px 7px;
   box-sizing: border-box;
   border: 1px solid #fff;
@@ -56,6 +56,19 @@
 }
 
 .register-password {
+  margin: auto;
+  /* margin-bottom: 30px; */
+  margin-bottom: 0px;
+  padding: 7px 7px 7px 7px;
+  box-sizing: border-box;
+  border: 1px solid #fff;
+  border-radius: 6px;
+  width: 80%;
+  background-color: rgb(241, 241, 247);
+  font-size: 18px;
+}
+
+.register-confirm-password {
   margin: auto;
   /* margin-bottom: 30px; */
   margin-bottom: 10px;
