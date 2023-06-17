@@ -38,7 +38,7 @@ function Profile() {
     papers: [],
   };
 
-  const [profile, setProfile] = useState(defaultProfile); // user's current profile displayed
+  const [profile, setProfile] = useState(); // user's current profile displayed
   const [updatedProfile, setUpdatedProfile] = useState(defaultProfile); // user's updated profile in inline edit or modal form control
 
   const [inlineEditMode, setInlineEditMode] = useState({
