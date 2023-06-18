@@ -33,13 +33,12 @@ const MultilineEdit = ({
   };
 
   const onBlur = (event) => {
+    // empty input is not allowed
     if (event.target.value.trim() === "") {
       setEditingValue(value);
     } else {
       setValue(event.target.value, index);
     }
-
-    // set corresponding editMode to be false
   };
 
   const onInput = (target) => {
@@ -52,6 +51,10 @@ const MultilineEdit = ({
   useEffect(() => {
     onInput(textareaRef.current);
   }, [onInput, textareaRef]);
+
+  useEffect(() => {
+    setEditingValue(value); // Update the editingValue when the value changes
+  }, [value]);
 
   useEffect(() => {
     if (shouldFocus) {
