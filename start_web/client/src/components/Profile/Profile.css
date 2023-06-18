@@ -4,6 +4,25 @@
   background-color: #fff;
 }
 
+.resubmit-form-container {
+  margin-top: 20px;
+  margin-left: 92px;
+  /* margin-left: 15px; */
+  margin-bottom: 20px;
+  font-size: 15px;
+  /* background-color: #e6eaff; */
+  /* border-radius: 50px; */
+  padding: 0.2rem 0.5rem;
+  border: 1px solid #fff;
+  background: #e6eaff;
+  color: black;
+  /* font-size: 22px; */
+  /* font-weight: 700; */
+  cursor: pointer;
+  border-radius: 25px;
+  
+}
+
 .container-profile {
   display: flex;
   align-items: stretch;

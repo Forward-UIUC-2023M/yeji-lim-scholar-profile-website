@@ -6,6 +6,7 @@ import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import * as FiIcons from "react-icons/fi";
+import { Link } from "react-router-dom";
 import {
   BiEdit,
   BiCheckSquare,
@@ -308,6 +309,9 @@ function Profile() {
   if (profile) {
     return (
       <div className="profile-page-container">
+        <Link to="/form">
+          <button className="resubmit-form-container">Resubmit Form</button>
+        </Link>
         <div>
           <Modal
             show={modalEditMode.basicInfo}
