@@ -348,6 +348,7 @@ import {
   ListItem,
   Text,
   Spacer,
+  Textarea,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import "./Form.css";
@@ -357,6 +358,7 @@ function Form() {
   const [fileName, setFileName] = useState("No CV selected");
   const [url, setUrl] = useState("");
   const [urls, setUrls] = useState([]);
+  const [text, setText] = useState("");
 
   const navigate = useNavigate();
 
@@ -372,6 +374,10 @@ function Form() {
   const handleAddUrl = () => {
     setUrls((prevUrls) => [...prevUrls, url]);
     setUrl("");
+  };
+
+  const handleTextChange = (e) => {
+    setText(e.target.value);
   };
 
   //   const handleSubmit = async (e) => {
@@ -512,64 +518,81 @@ function Form() {
   };
 
   return (
-    <Flex
-      direction="column"
-      align="center"
-      justify="center"
-      height="100vh"
-      padding="20"
-    >
-      <Flex direction="row" justify="center" align="center" width="100%">
-        <Spacer />
-        <Box
-          width="xl"
-          borderWidth="1px"
-          borderRadius="15px"
-          padding="40"
-          backgroundColor="#fff"
-        >
-          <Input
-            type="file"
-            hidden
-            id="file-upload"
-            onChange={handleFileChange}
-          />
-          <Flex alignItems="center" marginBottom="20">
-            <Button as="label" htmlFor="file-upload" className="add-button">
-              Add CV
-            </Button>
-            <Text ml="10" mt="15">
-              {fileName}
-            </Text>
-          </Flex>
-          <Flex marginBottom="5">
+    <>
+      <div className="form-intro-1">
+        <p>Time to generate your personalized profile!</p>
+      </div>
+      <div className="form-intro-2">
+        <p>Upload your Resume/CV and any relevant URLs</p>
+      </div>
+      <Flex
+        direction="column"
+        align="center"
+        justify="center"
+        // height="100vh"
+        // margin-top="20"
+        padding="20"
+      >
+        <Flex direction="row" justify="center" align="center" width="100%">
+          <Spacer />
+          <Box
+            width="xl"
+            borderWidth="1px"
+            borderRadius="15px"
+            padding="40"
+            backgroundColor="#fff"
+          >
             <Input
-              type="text"
-              placeholder="Enter URL..."
-              value={url}
-              onChange={handleUrlChange}
-              className="URLInput"
+              type="file"
+              hidden
+              id="file-upload"
+              onChange={handleFileChange}
             />
-            <Button className="add-button" onClick={handleAddUrl}>
-              Add URL
-            </Button>
-          </Flex>
-          <List spacing={3} mt="15">
-            {urls.map((url, index) => (
-              <ListItem key={index} className="list-item">
-                • {url}
-              </ListItem>
-            ))}
-          </List>
-          <Flex justifyContent="center" marginTop="30">
-            <Button className="generate-button" onClick={handleSubmit}>
-              Generate Profile
-            </Button>
-          </Flex>
-        </Box>
-        <Spacer />
+            <Flex alignItems="center" marginBottom="20">
+              <Button as="label" htmlFor="file-upload" className="add-button">
+                Add Resume/CV
+              </Button>
+              <Text ml="10" mt="15">
+                {fileName}
+              </Text>
+            </Flex>
+            <Flex marginBottom="5">
+              <Input
+                type="text"
+                placeholder="Enter URL..."
+                value={url}
+                onChange={handleUrlChange}
+                className="URLInput"
+              />
+              <Button className="add-button" onClick={handleAddUrl}>
+                Add URL
+              </Button>
+            </Flex>
+            <List spacing={3} mt="15">
+              {urls.map((url, index) => (
+                <ListItem key={index} className="list-item">
+                  • {url}
+                </ListItem>
+              ))}
+            </List>
+            <Flex>
+              <Textarea
+                className="textInput"
+                placeholder="Enter additional info..."
+                value={text}
+                onChange={handleTextChange}
+              />
+            </Flex>
+            <Flex justifyContent="center" marginTop="30">
+              <Button className="generate-button" onClick={handleSubmit}>
+                Generate Profile
+              </Button>
+            </Flex>
+          </Box>
+          <Spacer />
+        </Flex>
       </Flex>
-    </Flex>
+    </>
   );
 }
 

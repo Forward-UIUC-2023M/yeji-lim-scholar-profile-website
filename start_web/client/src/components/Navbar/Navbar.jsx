@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { NavItems } from "./NavItems";
 import { SidebarItems } from "../Sidebar/SidebarItems";
 import { useNavigate } from "react-router-dom";
+import Landing from "../Landing/Landing";
 import "./Navbar.css";
 
 function Navbar() {
@@ -78,6 +79,7 @@ function Navbar() {
               <li>
                 <Link className="nav-links" to="/login">
                   Log In
+                  {/* <Landing landing={true}/> */}
                 </Link>
               </li>
             </>
