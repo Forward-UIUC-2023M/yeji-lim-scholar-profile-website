@@ -2,7 +2,7 @@
 import React from "react";
 import MultilineEdit from "./MultilineEdit";
 import "./Profile.css";
-import { useState, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import * as FiIcons from "react-icons/fi";
@@ -19,9 +19,6 @@ import { Button, Dropdown, Modal, Form } from "react-bootstrap";
 // Figure out how to use useEffect before rendering
 
 function Profile() {
-  const navigate = useNavigate();
-  const [profileId, setProfileId] = useState("");
-  const [photo, setPhoto] = useState("");
   const defaultProfile = {
     firstName: "",
     lastName: "",
@@ -38,6 +35,10 @@ function Profile() {
     papers: [],
   };
 
+  const navigate = useNavigate();
+  const saving = useRef(false); // true if user is saving the edition they made
+  const [profileId, setProfileId] = useState("");
+  const [photo, setPhoto] = useState("");
   const [profile, setProfile] = useState(); // user's current profile displayed
   const [updatedProfile, setUpdatedProfile] = useState(defaultProfile); // user's updated profile in inline edit or modal form control
 
@@ -72,38 +73,8 @@ function Profile() {
     </a>
   ));
 
-  const click = (e) => {
+  const handleCreateProfile = () => {
     navigate("/form");
-  };
-
-  // setter for all fields in the user profile
-  const setProfileField = (fieldName, value, index = null) => {
-    setProfile((prevProfile) => {
-      if (index === null) {
-        // Handle non-indexed fields
-        return {
-          ...prevProfile,
-          [fieldName]: value,
-        };
-      } else if (index === -1) {
-        // Handle adding new entry to the list
-        const updatedField = [...prevProfile[fieldName], value];
-
-        return {
-          ...prevProfile,
-          [fieldName]: updatedField,
-        };
-      } else {
-        // Handle indexed fields
-        const updatedField = [...prevProfile[fieldName]];
-        updatedField[index] = value;
-
-        return {
-          ...prevProfile,
-          [fieldName]: updatedField,
-        };
-      }
-    });
   };
 
   // setter for all fields in the user updated profile
@@ -137,8 +108,8 @@ function Profile() {
   };
 
   // remove the specified index in the given fieldName array, fieldName must be an array!
-  const removeProfileField = (fieldName, index = null) => {
-    setProfile((prevProfile) => {
+  const removeUpdatedProfileField = (fieldName, index = null) => {
+    setUpdatedProfile((prevProfile) => {
       const updatedField = [...prevProfile[fieldName]];
       updatedField.splice(index, 1);
 
@@ -165,9 +136,11 @@ function Profile() {
       ...prevEditingStates,
       [fieldName]: false,
     }));
+
+    removeEmptyField();
   };
 
-  // set profile to be the updated version and then close the inlineEditMode
+  // set profile to be the updated version, close the inlineEditMode, and send profile to backend
   const handleSaveInlineEdit = (fieldName) => {
     setProfile(updatedProfile);
 
@@ -176,7 +149,8 @@ function Profile() {
       [fieldName]: false,
     }));
 
-    updateBackend();
+    const newProfile = removeEmptyField();
+    updateBackend(newProfile);
   };
 
   // set field in inlineEditMode to be true when the user clicks on edit buttons
@@ -195,10 +169,12 @@ function Profile() {
       ...prevEditingStates,
       [fieldName]: false,
     }));
+
+    removeEmptyField();
   };
 
-  // set profile to be the updated version and then close the modal
-  const handleSaveModalEdit = async (fieldName) => {
+  // set profile to be the updated version, close the modal, and send profile to backend
+  const handleSaveModalEdit = (fieldName) => {
     setProfile(updatedProfile);
 
     setModalEditMode((prevEditingStates) => ({
@@ -206,26 +182,82 @@ function Profile() {
       [fieldName]: false,
     }));
 
-    updateBackend();
+    const newProfile = removeEmptyField();
+    updateBackend(newProfile);
   };
 
-  const updateBackend = async () => {
+  // remove any empty field in the updatedProfile. Returns the profile with no empty field for use in backend
+  const removeEmptyField = () => {
+    // TODO: write a more generalized form
+    let updatedTitles = updatedProfile.titles.filter((title) => title !== "");
+    let updatedFocusAreas = updatedProfile.focusAreas.filter(
+      (focusArea) => focusArea !== ""
+    );
+    let updatedEducations = updatedProfile.educations.filter(
+      (education) => education !== ""
+    );
+    let updatedHonors = updatedProfile.honors.filter((honor) => honor !== "");
+    let updatedExperiences = updatedProfile.experiences.filter(
+      (experience) => experience !== ""
+    );
+    let updatedKeywords = updatedProfile.keywords.filter(
+      (keyword) => keyword !== ""
+    );
+    let updatedPapers = updatedProfile.papers.filter((paper) => paper !== "");
+
+    updatedTitles = updatedTitles.length === 0 ? ["NONE"] : updatedTitles;
+    updatedFocusAreas =
+      updatedFocusAreas.length === 0 ? ["NONE"] : updatedFocusAreas;
+    updatedEducations =
+      updatedEducations.length === 0 ? ["NONE"] : updatedEducations;
+    updatedHonors = updatedHonors.length === 0 ? ["NONE"] : updatedHonors;
+    updatedExperiences =
+      updatedExperiences.length === 0 ? ["NONE"] : updatedExperiences;
+    updatedKeywords = updatedKeywords.length === 0 ? ["NONE"] : updatedKeywords;
+    updatedPapers = updatedPapers.length === 0 ? ["NONE"] : updatedPapers;
+
+    setUpdatedProfile((prevProfile) => ({
+      ...prevProfile,
+      titles: updatedTitles,
+      focusAreas: updatedFocusAreas,
+      educations: updatedEducations,
+      honors: updatedHonors,
+      experiences: updatedExperiences,
+      keywords: updatedKeywords,
+      papers: updatedPapers,
+    }));
+
+    const newProfile = {
+      ...updatedProfile,
+      titles: updatedTitles,
+      focusAreas: updatedFocusAreas,
+      educations: updatedEducations,
+      honors: updatedHonors,
+      experiences: updatedExperiences,
+      keywords: updatedKeywords,
+      papers: updatedPapers,
+    };
+
+    return newProfile;
+  };
+
+  const updateBackend = async (currProfile) => {
     const account = localStorage.getItem("token");
-    console.log("updated profile: ", updatedProfile);
+    
     var data = JSON.stringify({
-      firstName: updatedProfile.firstName,
-      lastName: updatedProfile.lastName,
-      keywords: updatedProfile.keywords,
-      email: updatedProfile.email,
-      phone: updatedProfile.phone,
-      institution: updatedProfile.institution,
-      titles: updatedProfile.titles,
-      major: updatedProfile.major,
-      focusAreas: updatedProfile.focusAreas,
-      educations: updatedProfile.educations,
-      honors: updatedProfile.honors,
-      experiences: updatedProfile.experiences,
-      papers: updatedProfile.papers,
+      firstName: currProfile.firstName,
+      lastName: currProfile.lastName,
+      keywords: currProfile.keywords,
+      email: currProfile.email,
+      phone: currProfile.phone,
+      institution: currProfile.institution,
+      titles: currProfile.titles,
+      major: currProfile.major,
+      focusAreas: currProfile.focusAreas,
+      educations: currProfile.educations,
+      honors: currProfile.honors,
+      experiences: currProfile.experiences,
+      papers: currProfile.papers,
     });
     var config = {
       method: "put",
@@ -244,12 +276,10 @@ function Profile() {
       .catch(function (error) {
         console.log(error);
       });
-  }
-
-  const handleAddTitle = () => {};
+  };
 
   useEffect(() => {
-    let defaultData = async (e) => {
+    let defaultData = async () => {
       try {
         // const account = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0N2NjZWM4MmUwY2Y4Y2M0MDVlMmFhNiIsImlhdCI6MTY4NTkxMTU3OSwiZXhwIjoxNjg4NTAzNTc5fQ.iJg27Jre1t-x5Ii7730bVr_ySvtPB8CWGMJ-exV1NWQ";
         const account = localStorage.getItem("token");
@@ -258,21 +288,13 @@ function Profile() {
             Authorization: `Bearer ${account}`,
           },
         });
-        console.log("user is: ", user.data.data.photo);
         setPhoto(user.data.data.photo);
-        console.log("user is 2: ", photo);
-        // setId(user.data.data._id);
-        // console.log("id", id);
 
         const { data } = await axios.get("http://localhost:8000/api/profiles");
-        console.log(data);
-        console.log("user id: ", user.data.data._id);
         const profile_to_set = await data.data.filter(
           (prof) => prof.user === user.data.data._id
         );
-          console.log("prof to se idt: ", profile_to_set[0]._id);
         setProfileId(profile_to_set[0]._id);
-
         setProfile(profile_to_set[0]);
         setUpdatedProfile(profile_to_set[0]);
       } catch (error) {
@@ -283,11 +305,6 @@ function Profile() {
     defaultData();
   }, []);
 
-  // const location = useLocation();
-  // const userInfo = location.state.userInfo;
-
-  console.log("profile: ", profile);
-  console.log("profile new: ", updatedProfile);
   if (profile) {
     return (
       <div className="profile-page-container">
@@ -303,7 +320,7 @@ function Profile() {
               Name:
               <Form.Control
                 type="text"
-                defaultValue={profile.firstName}
+                defaultValue={updatedProfile.firstName}
                 placeholder="First Name"
                 onChange={(e) =>
                   setUpdatedProfileField("firstName", e.target.value)
@@ -311,7 +328,7 @@ function Profile() {
               />
               <Form.Control
                 type="text"
-                defaultValue={profile.lastName}
+                defaultValue={updatedProfile.lastName}
                 placeholder="Last Name"
                 onChange={(e) =>
                   setUpdatedProfileField("lastName", e.target.value)
@@ -320,7 +337,7 @@ function Profile() {
               Email:
               <Form.Control
                 type="text"
-                defaultValue={profile.email}
+                defaultValue={updatedProfile.email}
                 placeholder="Email"
                 onChange={(e) =>
                   setUpdatedProfileField("email", e.target.value)
@@ -329,7 +346,7 @@ function Profile() {
               Phone:
               <Form.Control
                 type="text"
-                defaultValue={profile.phone}
+                defaultValue={updatedProfile.phone}
                 placeholder="Phone"
                 onChange={(e) =>
                   setUpdatedProfileField("phone", e.target.value)
@@ -338,7 +355,7 @@ function Profile() {
               Institution:
               <Form.Control
                 type="text"
-                defaultValue={profile.institution}
+                defaultValue={updatedProfile.institution}
                 placeholder="Institution"
                 onChange={(e) =>
                   setUpdatedProfileField("institution", e.target.value)
@@ -346,7 +363,7 @@ function Profile() {
               />
               Title:
               <ul>
-                {profile.titles?.map((title, index) => (
+                {updatedProfile.titles?.map((title, index) => (
                   <li key={index}>
                     <Form.Control
                       type="text"
@@ -362,7 +379,7 @@ function Profile() {
               Major:
               <Form.Control
                 type="text"
-                defaultValue={profile.major}
+                defaultValue={updatedProfile.major}
                 placeholder="Major"
                 onChange={(e) =>
                   setUpdatedProfileField("major", e.target.value)
@@ -370,7 +387,7 @@ function Profile() {
               />
               Focus Areas:
               <ul>
-                {profile.focusAreas?.map((focusArea, index) => (
+                {updatedProfile.focusAreas?.map((focusArea, index) => (
                   <li key={index}>
                     <Form.Control
                       type="text"
@@ -411,7 +428,7 @@ function Profile() {
               <div className="container-detail-1">
                 <MultilineEdit
                   placeholder="First Name: "
-                  value={profile.firstName}
+                  value={updatedProfile.firstName}
                   setValue={(value) =>
                     setUpdatedProfileField("firstName", value)
                   }
@@ -419,7 +436,7 @@ function Profile() {
                 />
                 <MultilineEdit
                   placeholder="Last Name: "
-                  value={profile.lastName}
+                  value={updatedProfile.lastName}
                   setValue={(value) =>
                     setUpdatedProfileField("lastName", value)
                   }
@@ -433,7 +450,7 @@ function Profile() {
 
                 <MultilineEdit
                   placeholder="Phone: "
-                  value={profile.phone}
+                  value={updatedProfile.phone}
                   setValue={(value) => setUpdatedProfileField("phone", value)}
                 />
               </div>
@@ -443,7 +460,7 @@ function Profile() {
               <div className="container-detail-2">
                 <MultilineEdit
                   placeholder="institution: "
-                  value={profile.institution}
+                  value={updatedProfile.institution}
                   setValue={(value) =>
                     setUpdatedProfileField("institution", value)
                   }
@@ -452,8 +469,8 @@ function Profile() {
                 <h3>Title</h3>
 
                 <ul>
-                  {profile.titles?.map((title, index) => {
-                    if (index !== profile.titles.length - 1) {
+                  {updatedProfile.titles?.map((title, index) => {
+                    if (index !== updatedProfile.titles.length - 1) {
                       return (
                         <li className="title" key={index}>
                           <div className="d-flex">
@@ -470,7 +487,7 @@ function Profile() {
                               color="#123456"
                               className="ms-3 mt-1 bi-add-button"
                               onClick={() =>
-                                removeProfileField("titles", index)
+                                removeUpdatedProfileField("titles", index)
                               }
                             />
                           </div>
@@ -492,7 +509,9 @@ function Profile() {
                               size={30}
                               color="#123456"
                               className="ms-3 mt-1 bi-add-button"
-                              onClick={() => setProfileField("titles", "", -1)}
+                              onClick={() =>
+                                setUpdatedProfileField("titles", "", -1)
+                              }
                             />
                           </div>
                         </li>
@@ -504,14 +523,14 @@ function Profile() {
                 <h3> Major </h3>
                 <MultilineEdit
                   placeholder="Major: "
-                  value={profile.major}
+                  value={updatedProfile.major}
                   setValue={(value) => setUpdatedProfileField("major", value)}
                 />
 
                 <h3>Focus Area</h3>
                 <ul>
-                  {profile.focusAreas?.map((focusArea, index) => {
-                    if (index !== profile.focusAreas.length - 1) {
+                  {updatedProfile.focusAreas?.map((focusArea, index) => {
+                    if (index !== updatedProfile.focusAreas.length - 1) {
                       return (
                         <li className="focusArea" key={index}>
                           <div className="d-flex">
@@ -532,7 +551,7 @@ function Profile() {
                               color="#123456"
                               className="ms-3 mt-1 bi-add-button"
                               onClick={() =>
-                                removeProfileField("focusAreas", index)
+                                removeUpdatedProfileField("focusAreas", index)
                               }
                             />
                           </div>
@@ -559,7 +578,7 @@ function Profile() {
                               color="#123456"
                               className="ms-3 mt-1 bi-add-button"
                               onClick={() =>
-                                setProfileField("focusAreas", "", -1)
+                                setUpdatedProfileField("focusAreas", "", -1)
                               }
                             />
                           </div>
@@ -589,10 +608,10 @@ function Profile() {
 
               <div className="container-detail-1">
                 <h1>
-                  {profile.firstName + " " + profile.lastName}
+                  {updatedProfile.firstName + " " + updatedProfile.lastName}
                 </h1>
-                <h4>{profile.email}</h4>
-                <h4>{profile.phone}</h4>
+                <h4>{updatedProfile.email}</h4>
+                <h4>{updatedProfile.phone}</h4>
               </div>
 
               <div className="container-vertical-line"></div>
@@ -602,11 +621,11 @@ function Profile() {
                   className="edit-button"
                   onClick={() => handleOpenInlineEdit("major")}
                 />
-                <h3>{profile.institution}</h3>
+                <h3>{updatedProfile.institution}</h3>
                 <h3>Title</h3>
 
                 <ul>
-                  {profile.titles?.map((title, index) => {
+                  {updatedProfile.titles?.map((title, index) => {
                     return (
                       <li className="title" key={index}>
                         {title}
@@ -615,10 +634,10 @@ function Profile() {
                   })}
                 </ul>
 
-                <h3> Major: {profile.major}</h3>
+                <h3> Major: {updatedProfile.major}</h3>
                 <h3>Focus Area</h3>
                 <ul>
-                  {profile.focusAreas?.map((focusArea, index) => {
+                  {updatedProfile.focusAreas?.map((focusArea, index) => {
                     return (
                       <li className="focusArea" key={index}>
                         {focusArea}
@@ -662,7 +681,7 @@ function Profile() {
                 <Modal.Body>
                   Education:
                   <ul>
-                    {profile.educations?.map((education, index) => (
+                    {updatedProfile.educations?.map((education, index) => (
                       <li key={index}>
                         <Form.Control
                           type="text"
@@ -700,8 +719,8 @@ function Profile() {
                 <>
                   <h1>Education</h1>
                   <ul>
-                    {profile.educations?.map((education, index) => {
-                      if (index !== profile.educations.length - 1) {
+                    {updatedProfile.educations?.map((education, index) => {
+                      if (index !== updatedProfile.educations.length - 1) {
                         return (
                           <li className="education" key={index}>
                             <div className="d-flex">
@@ -722,7 +741,7 @@ function Profile() {
                                 color="#123456"
                                 className="ms-3 mt-1 bi-add-button"
                                 onClick={() =>
-                                  removeProfileField("educations", index)
+                                  removeUpdatedProfileField("educations", index)
                                 }
                               />
                             </div>
@@ -749,7 +768,7 @@ function Profile() {
                                 color="#123456"
                                 className="ms-3 mt-1 bi-add-button"
                                 onClick={() =>
-                                  setProfileField("educations", "", -1)
+                                  setUpdatedProfileField("educations", "", -1)
                                 }
                               />
                             </div>
@@ -794,7 +813,7 @@ function Profile() {
 
                   <h1>Education</h1>
                   <ul>
-                    {profile.educations?.map((education, index) => {
+                    {updatedProfile.educations?.map((education, index) => {
                       return (
                         <li className="education" key={index}>
                           {education}
@@ -817,7 +836,7 @@ function Profile() {
                 <Modal.Body>
                   Honor:
                   <ul>
-                    {profile.honors?.map((honor, index) => (
+                    {updatedProfile.honors?.map((honor, index) => (
                       <li key={index}>
                         <Form.Control
                           type="text"
@@ -855,8 +874,8 @@ function Profile() {
                 <>
                   <h1>Honor</h1>
                   <ul>
-                    {profile.honors?.map((honor, index) => {
-                      if (index !== profile.honors.length - 1) {
+                    {updatedProfile.honors?.map((honor, index) => {
+                      if (index !== updatedProfile.honors.length - 1) {
                         return (
                           <li className="honor" key={index}>
                             <div className="d-flex">
@@ -873,7 +892,7 @@ function Profile() {
                                 color="#123456"
                                 className="ms-3 mt-1 bi-add-button"
                                 onClick={() =>
-                                  removeProfileField("honors", index)
+                                  removeUpdatedProfileField("honors", index)
                                 }
                               />
                             </div>
@@ -896,7 +915,7 @@ function Profile() {
                                 color="#123456"
                                 className="ms-3 mt-1 bi-add-button"
                                 onClick={() =>
-                                  setProfileField("honors", "", -1)
+                                  setUpdatedProfileField("honors", "", -1)
                                 }
                               />
                             </div>
@@ -941,7 +960,7 @@ function Profile() {
 
                   <h1>Honor</h1>
                   <ul>
-                    {profile.honors?.map((honor, index) => {
+                    {updatedProfile.honors?.map((honor, index) => {
                       return (
                         <li className="honor" key={index}>
                           {honor}
@@ -964,7 +983,7 @@ function Profile() {
                 <Modal.Body>
                   Experience:
                   <ul>
-                    {profile.experiences?.map((experience, index) => (
+                    {updatedProfile.experiences?.map((experience, index) => (
                       <li key={index}>
                         <Form.Control
                           type="text"
@@ -1002,8 +1021,8 @@ function Profile() {
                 <>
                   <h1>Experience</h1>
                   <ul>
-                    {profile.experiences?.map((experience, index) => {
-                      if (index !== profile.experiences.length - 1) {
+                    {updatedProfile.experiences?.map((experience, index) => {
+                      if (index !== updatedProfile.experiences.length - 1) {
                         return (
                           <li className="experience" key={index}>
                             <div className="d-flex">
@@ -1024,7 +1043,10 @@ function Profile() {
                                 color="#123456"
                                 className="ms-3 mt-1 bi-add-button"
                                 onClick={() =>
-                                  removeProfileField("experiences", index)
+                                  removeUpdatedProfileField(
+                                    "experiences",
+                                    index
+                                  )
                                 }
                               />
                             </div>
@@ -1051,7 +1073,7 @@ function Profile() {
                                 color="#123456"
                                 className="ms-3 mt-1 bi-add-button"
                                 onClick={() =>
-                                  setProfileField("experiences", "", -1)
+                                  setUpdatedProfileField("experiences", "", -1)
                                 }
                               />
                             </div>
@@ -1096,7 +1118,7 @@ function Profile() {
 
                   <h1>Experience</h1>
                   <ul>
-                    {profile.experiences?.map((experience, index) => {
+                    {updatedProfile.experiences?.map((experience, index) => {
                       return (
                         <li className="experience" key={index}>
                           {experience}
@@ -1119,7 +1141,7 @@ function Profile() {
                 <Modal.Body>
                   Keyword:
                   <ul>
-                    {profile.keywords?.map((keyword, index) => (
+                    {updatedProfile.keywords?.map((keyword, index) => (
                       <li key={index}>
                         <Form.Control
                           type="text"
@@ -1157,8 +1179,8 @@ function Profile() {
                 <>
                   <h1>Keywords</h1>
                   <ul>
-                    {profile.keywords?.map((keyword, index) => {
-                      if (index !== profile.keywords.length - 1) {
+                    {updatedProfile.keywords?.map((keyword, index) => {
+                      if (index !== updatedProfile.keywords.length - 1) {
                         return (
                           <li className="keyword" key={index}>
                             <div className="d-flex">
@@ -1179,7 +1201,7 @@ function Profile() {
                                 color="#123456"
                                 className="ms-3 mt-1 bi-add-button"
                                 onClick={() =>
-                                  removeProfileField("keywords", index)
+                                  removeUpdatedProfileField("keywords", index)
                                 }
                               />
                             </div>
@@ -1206,7 +1228,7 @@ function Profile() {
                                 color="#123456"
                                 className="ms-3 mt-1 bi-add-button"
                                 onClick={() =>
-                                  setProfileField("keywords", "", -1)
+                                  setUpdatedProfileField("keywords", "", -1)
                                 }
                               />
                             </div>
@@ -1251,7 +1273,7 @@ function Profile() {
 
                   <h1>Keywords</h1>
                   <ul>
-                    {profile.keywords?.map((keyword, index) => {
+                    {updatedProfile.keywords?.map((keyword, index) => {
                       return (
                         <li className="keyword" key={index}>
                           {keyword}
@@ -1275,7 +1297,7 @@ function Profile() {
               <Modal.Body>
                 Paper:
                 <ul>
-                  {profile.papers?.map((paper, index) => (
+                  {updatedProfile.papers?.map((paper, index) => (
                     <li key={index}>
                       <Form.Control
                         type="text"
@@ -1313,8 +1335,8 @@ function Profile() {
               <>
                 <h1>Papers</h1>
                 <ul>
-                  {profile.papers?.map((paper, index) => {
-                    if (index !== profile.papers.length - 1) {
+                  {updatedProfile.papers?.map((paper, index) => {
+                    if (index !== updatedProfile.papers.length - 1) {
                       return (
                         <li className="paper" key={index}>
                           <div className="d-flex">
@@ -1331,7 +1353,7 @@ function Profile() {
                               color="#123456"
                               className="ms-3 mt-1 bi-add-button"
                               onClick={() =>
-                                removeProfileField("papers", index)
+                                removeUpdatedProfileField("papers", index)
                               }
                             />
                           </div>
@@ -1353,7 +1375,9 @@ function Profile() {
                               size={30}
                               color="#123456"
                               className="ms-3 mt-1 bi-add-button"
-                              onClick={() => setProfileField("papers", "", -1)}
+                              onClick={() =>
+                                setUpdatedProfileField("papers", "", -1)
+                              }
                             />
                           </div>
                         </li>
@@ -1397,7 +1421,7 @@ function Profile() {
 
                 <h1>Papers</h1>
                 <ul>
-                  {profile.papers?.map((paper, index) => {
+                  {updatedProfile.papers?.map((paper, index) => {
                     return (
                       <li className="paper" key={index}>
                         {paper}
@@ -1415,7 +1439,7 @@ function Profile() {
     return (
       <div className="no-profile-container">
         <h1>A Profile Has Not Been Made</h1>
-        <button className="go-to-form-button" onClick={click}>
+        <button className="go-to-form-button" onClick={handleCreateProfile}>
           Make Your First Profile!
         </button>
       </div>
