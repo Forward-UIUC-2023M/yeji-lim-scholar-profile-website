@@ -9,8 +9,11 @@ const FormSchema = mongoose.Schema({
   user: {
     type: mongoose.Schema.ObjectId,
     ref: "User",
-    // required: true,
+    required: true,
   },
+  extraInfo: {
+    type: String,
+  }
 });
 
 module.exports = mongoose.model("Forms", FormSchema);
