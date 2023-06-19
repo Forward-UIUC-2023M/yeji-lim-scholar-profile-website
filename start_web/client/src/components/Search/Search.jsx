@@ -273,6 +273,7 @@ function Search() {
                   <h5 className="mt-2">Filter by Keyword</h5>
                   <div className="d-flex mt-2">
                     <Form.Control
+                      key={filterKeywords.length}
                       type="search"
                       placeholder="Search Keywords..."
                       className="me-2 filter-bar"
