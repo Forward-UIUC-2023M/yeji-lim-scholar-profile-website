@@ -1,12 +1,8 @@
 // import React from "react";
 import React from "react";
-import MultilineEdit from "./MultilineEdit";
-import "./Profile.css";
 import { useState, useRef, useEffect } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import * as FiIcons from "react-icons/fi";
-import { Link } from "react-router-dom";
 import {
   BiEdit,
   BiCheckSquare,
@@ -15,6 +11,9 @@ import {
   BiMinusCircle,
 } from "react-icons/bi";
 import { Button, Dropdown, Modal, Form } from "react-bootstrap";
+import axios from "axios";
+import MultilineEdit from "./MultilineEdit";
+import "./Profile.css";
 
 // Connect this to backend, loop through back end to get the list elements
 // Figure out how to use useEffect before rendering
@@ -37,7 +36,9 @@ function Profile() {
   };
 
   const navigate = useNavigate();
-  const saving = useRef(false); // true if user is saving the edition they made
+  const location = useLocation();
+  let shouldDelete = location.state || false;
+
   const [profileId, setProfileId] = useState("");
   const [photo, setPhoto] = useState("");
   const [profile, setProfile] = useState(); // user's current profile displayed
@@ -244,7 +245,7 @@ function Profile() {
 
   const updateBackend = async (currProfile) => {
     const account = localStorage.getItem("token");
-    
+
     var data = JSON.stringify({
       firstName: currProfile.firstName,
       lastName: currProfile.lastName,
@@ -306,12 +307,59 @@ function Profile() {
     defaultData();
   }, []);
 
+  // delete the profile if user perform the action
+  useEffect(() => {
+    if (shouldDelete) {
+      shouldDelete = false;
+
+      const account = localStorage.getItem("token");
+
+      // delete the profile
+      var config1 = {
+        method: "delete",
+        url: `http://localhost:8000/api/profiles/${profileId}`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${account}`,
+        },
+      };
+
+      // delete the form
+      var config2 = {
+        method: "delete",
+        url: `http://localhost:8000/api/forms/${profileId}`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${account}`,
+        },
+      };
+
+      let defaultData = async () => {
+        await axios(config1)
+          .then(function (response) {
+            console.log("deleteProfile", response);
+            setProfile();
+            setUpdatedProfile(defaultProfile);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+
+        await axios(config2)
+          .then(function (response) {
+            console.log("deleteForm", response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      };
+      defaultData();
+    }
+  }, [shouldDelete]);
+
   if (profile) {
     return (
       <div className="profile-page-container">
-        <Link to="/form">
-          <button className="resubmit-form-container">Resubmit Form</button>
-        </Link>
         <div>
           <Modal
             show={modalEditMode.basicInfo}
