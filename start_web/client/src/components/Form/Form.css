@@ -89,6 +89,17 @@
   border-radius: 30px;
 }
 
+.delete-button {
+  padding: 0.3rem 1rem;
+  margin-left: 8px;
+  border: 1px solid #fff;
+  background: #ed7285;
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
+  border-radius: 30px;
+}
+
 .list-item {
   font-size: 20px;
 }

@@ -294,7 +294,6 @@ function Profile() {
         setPhoto(user.data.data.photo);
 
         const { data } = await axios.get("http://localhost:8000/api/profiles");
-        console.log("data: ", data);
         const profile_to_set = await data.data.filter(
           (prof) => prof.user === user.data.data._id
         );

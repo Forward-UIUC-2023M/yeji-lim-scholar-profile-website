@@ -1,11 +1,13 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import "./Landing.css";
 
 function Landing() {
   // window.location.reload(false);
+  const location = useLocation();
   const auth = localStorage.getItem("token");
   console.log("auth: ", auth);
+  // let loggedOut = location.state || false;
   // if (auth) {
   //   return (
   //     <div className="landingPage-container">
@@ -47,8 +49,9 @@ function Landing() {
   //   );
   // }
   // console.log("landing: ", landing);
-  // if (landing) {
+  // if (loggedOut) {
   //   window.location.reload(false);
+  //   loggedOut = false;
   // }
   return (
     <div>

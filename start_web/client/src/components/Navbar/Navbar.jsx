@@ -16,7 +16,8 @@ function Navbar() {
 
   const logout = () => {
     localStorage.clear();
-    navigate("/");
+    navigate("/", { state: { loggedOut: true } });
+    // navigate("/");
   };
 
   const handleSwitchDropDown = (state) => {
