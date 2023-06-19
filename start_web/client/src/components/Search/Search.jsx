@@ -14,11 +14,15 @@ import axios from "axios";
 import "./Search.css";
 
 function Search() {
-  const MAX_LENGTH = 5; // maximum number of links or keywords displayed
+  const MAX_LENGTH = 4; // maximum number of links or keywords displayed
   const [profiles, setProfiles] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  // const [subscribed, setSubscribed] = useState(false);
+  const [filterTerm, setFilterTerm] = useState("");
   const [searchPerformed, setSearchPerformed] = useState(false);
+  const [filterBoxshown, setFilterBoxshown] = useState(false);
+  // TODO: You may want something like 
+  // const [filteredKeywords, setFilteredKeywords] = useState([]);
+  // to control all the filtered keywords
 
   const handleSubscribe = async (profileId) => {
     try {
@@ -80,6 +84,16 @@ function Search() {
     }
   };
 
+  // control when filter box is shown
+  const handleShowFilterBox = () => {
+    setFilterBoxshown(!filterBoxshown);
+  };
+
+  // apply the filtered keywords to the search results
+  const handleApplyFilters = () => {
+
+  }
+
   return (
     <div>
       <Container
@@ -107,6 +121,13 @@ function Search() {
               <Button type="submit" onClick={handleSearch}>
                 Search
               </Button>
+              <Button
+                variant={filterBoxshown ? "danger" : "success"}
+                className="ms-2"
+                onClick={handleShowFilterBox}
+              >
+                Filter
+              </Button>
             </Form>
           </Col>
         </Row>
@@ -118,96 +139,138 @@ function Search() {
             ? "align-items-center after-search"
             : "align-items-center"
         }
-        style={{ borderRadius: "30%" }}
       >
-        {profiles.map((profile, profile_index) => (
-          <ListGroup.Item
-            key={profile_index}
-            className="rounded mb-4 search-listGroup-item"
-          >
-            <div className="d-flex justify-content-between">
-              <div className="d-flex flex-column">
-                <h5 className="mt-2" style={{ fontWeight: "bold" }}>
-                  {profile.firstName && profile.lastName
-                    ? profile.firstName +
-                      " " +
-                      profile.lastName +
-                      ", " +
-                      profile.institution
-                    : profile.primaryName + ", " + profile.institution}
-                  &nbsp;
-                </h5>
+        {/* searching results */}
+        <div className="d-flex">
+          <div>
+            {profiles.map((profile, profile_index) => (
+              <ListGroup.Item
+                key={profile_index}
+                className={
+                  filterBoxshown
+                    ? "rounded search-listGroup-item-filter"
+                    : "rounded search-listGroup-item"
+                }
+              >
+                <div className="d-flex justify-content-between">
+                  <div className="d-flex flex-column">
+                    <div className="d-flex">
+                      <h6 className="mt-3" style={{ fontWeight: "bold" }}>
+                        {profile.firstName + " " + profile.lastName + ","}&nbsp;
+                      </h6>
 
-                {/* <div className="d-flex">
-                  <h6 className="mt-3" style={{ fontWeight: "bold" }}>
-                    {profile.firstName + " " + profile.lastName + ","}&nbsp;
-                  </h6>
+                      <h6 className="mt-3" style={{ fontWeight: "bold" }}>
+                        {profile.institution}
+                      </h6>
+                    </div>
 
-                  <h6 className="mt-3" style={{ fontWeight: "bold" }}>
-                    {profile.institution}
-                  </h6>
-                </div> */}
+                    <div className="d-flex">
+                      <h6 className="text-warning">Keywords:&nbsp;</h6>
 
-                <div className="d-flex">
-                  <h6 className="text-warning">Links:&nbsp;</h6>
+                      {/* display only first 5 keywords */}
+                      {profile.keywords
+                        .slice(0, MAX_LENGTH)
+                        .map((keyword, keyword_index) => {
+                          if (
+                            keyword_index ===
+                            Math.min(
+                              profile.keywords.length - 1,
+                              MAX_LENGTH - 1
+                            )
+                          ) {
+                            return <h6 key={keyword_index}>{keyword}</h6>;
+                          } else {
+                            return (
+                              <h6 key={keyword_index}>{keyword + ","}&nbsp;</h6>
+                            );
+                          }
+                        })}
+                      {profile.keywords.length > MAX_LENGTH && <h6>...</h6>}
+                    </div>
 
-                  {/* display only first 5 links */}
-                  {profile.links
-                    .slice(0, MAX_LENGTH)
-                    .map((link, link_index) => {
-                      if (
-                        link_index ===
-                        Math.min(profile.links.length - 1, MAX_LENGTH - 1)
-                      ) {
-                        return <h6 key={link_index}>{link}</h6>;
-                      } else {
-                        return <h6 key={link_index}>{link + ","}&nbsp;</h6>;
-                      }
-                    })}
-                  {profile.links.length > MAX_LENGTH && <h6>...</h6>}
+                    <div className="d-flex">
+                      <h6 className="text-warning">Publications:&nbsp;</h6>
+
+                      {/* display only first 5 links */}
+                      {profile.papers
+                        .slice(0, MAX_LENGTH)
+                        .map((paper, paper_index) => {
+                          if (
+                            paper_index ===
+                            Math.min(profile.papers.length - 1, MAX_LENGTH - 1)
+                          ) {
+                            return <h6 key={paper_index}>{paper}</h6>;
+                          } else {
+                            return (
+                              <h6 key={paper_index}>{paper + ","}&nbsp;</h6>
+                            );
+                          }
+                        })}
+                      {profile.papers.length > MAX_LENGTH && <h6>...</h6>}
+                    </div>
+                  </div>
+
+                  {profile.favorited ? (
+                    <div className="align-self-center">
+                      <AiFillStar
+                        size={25}
+                        color="orange"
+                        onClick={() => handleSubscribe(profile._id)}
+                      />
+                    </div>
+                  ) : (
+                    <div className="align-self-center">
+                      <AiOutlineStar
+                        size={25}
+                        onClick={() => handleSubscribe(profile._id)}
+                      />
+                    </div>
+                  )}
                 </div>
+              </ListGroup.Item>
+            ))}
+          </div>
 
-                <div className="d-flex">
-                  <h6 className="text-warning">Keywords:&nbsp;</h6>
+          {/* filter box */}
+          <div className="ms-5">
+            {filterBoxshown ? (
+              <ListGroup.Item className="rounded mt-5 filter-container">
+                <div className="d-flex flex-column">
+                  <h5 className="mt-2">Filter by Keyword</h5>
+                  <div className="d-flex mt-2">
+                    <Form.Control
+                      type="search"
+                      placeholder="Search Keywords..."
+                      className="me-2 filter-bar"
+                      aria-label="Filter"
+                      maxLength={80}
+                      onChange={(event) => setFilterTerm(event.target.value)}
+                    />
+                    <Button variant="dark"> Add </Button>
+                    <Button
+                      variant="dark"
+                      className="ms-2"
+                      style={{ whiteSpace: "nowrap" }}
+                      onClick={handleApplyFilters}
+                    >
+                      Apply Filters
+                    </Button>
+                  </div>
 
-                  {/* display only first 5 keywords */}
-                  {profile.keywords
-                    .slice(0, MAX_LENGTH)
-                    .map((keyword, keyword_index) => {
-                      if (
-                        keyword_index ===
-                        Math.min(profile.keywords.length - 1, MAX_LENGTH - 1)
-                      ) {
-                        return <h6 key={keyword_index}>{keyword}</h6>;
-                      } else {
-                        return (
-                          <h6 key={keyword_index}>{keyword + ","}&nbsp;</h6>
-                        );
-                      }
-                    })}
-                  {profile.keywords.length > MAX_LENGTH && <h6>...</h6>}
+                  <div className="d-flex flex-wrap mt-3 mb-2">
+                    <Button className="me-2 mb-2"> Data Science </Button>
+                    <Button className="me-2 mb-2"> Neural Networks </Button>
+                    <Button className="me-2 mb-2"> Machine Learning </Button>
+                    <Button className="me-2 mb-2"> Keyword Extraction </Button>
+                    <Button className="me-2 mb-2"> Data Science </Button>
+                  </div>
                 </div>
-              </div>
-
-              {profile.favorited ? (
-                <div className="align-self-center">
-                  <AiFillStar
-                    size={25}
-                    color="orange"
-                    onClick={() => handleSubscribe(profile._id)}
-                  />
-                </div>
-              ) : (
-                <div className="align-self-center">
-                  <AiOutlineStar
-                    size={25}
-                    onClick={() => handleSubscribe(profile._id)}
-                  />
-                </div>
-              )}
-            </div>
-          </ListGroup.Item>
-        ))}
+              </ListGroup.Item>
+            ) : (
+              <></>
+            )}
+          </div>
+        </div>
       </ListGroup>
     </div>
   );

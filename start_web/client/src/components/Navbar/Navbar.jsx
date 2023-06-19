@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { NavItems } from "./NavItems";
 import { SidebarItems } from "../Sidebar/SidebarItems";
 import { useNavigate } from "react-router-dom";
+import { NavDropdown } from "react-bootstrap";
 import Landing from "../Landing/Landing";
 import "./Navbar.css";
 
@@ -10,12 +11,23 @@ function Navbar() {
   const navigate = useNavigate();
   const auth = localStorage.getItem("token");
   const [sidebar, setSidebar] = useState(false);
+  const [shouldDropdown, setShouldDropdown] = useState(false);
   const showSidebar = () => setSidebar(!sidebar);
-  //   const [change, setChange] = useState(false);
+
   const logout = () => {
     localStorage.clear();
     navigate("/");
   };
+
+  const handleSwitchDropDown = (state) => {
+    setShouldDropdown(state);
+  };
+
+  // delete the user profile by passing the variable to Profile.jsx
+  const handleDeleteProfile = () => {
+    navigate("/profile", { state: { shouldDelete: true } });
+  };
+
   return (
     <>
       <nav className="NavbarItems">
@@ -23,43 +35,72 @@ function Navbar() {
           <FaIcons.FaBars onClick={showSidebar} />
         </Link> */}
         <Link to="/" className="navbar-logo">
-          {/* <HiIcons.HiLightBulb className="navbar-logo"/> */}
           ForwardData
         </Link>
         <ul className="navbar-menu">
-          {/* {NavItems.map((item, index) => {
-            return (
-              <li key={index}>
-                <a className={item.cName} href={item.url}>
-                  {item.title}
-                </a>
-              </li>
-            );
-          })} */}
           {auth ? (
             <>
               <li>
-                <Link className="nav-links" to="/profile">
-                  Profile
-                </Link>
+                {shouldDropdown ? (
+                  <NavDropdown title="Profile" className="nav-links">
+                    <NavDropdown.Item href="/form">
+                      Resubmit Form
+                    </NavDropdown.Item>
+                    <NavDropdown.Item
+                      href="#"
+                      onClick={() => {
+                        handleDeleteProfile();
+                      }}
+                    >
+                      Delete Profile
+                    </NavDropdown.Item>
+                  </NavDropdown>
+                ) : (
+                  <Link
+                    className="nav-links"
+                    to="/profile"
+                    onClick={() => handleSwitchDropDown(true)}
+                  >
+                    Profile
+                  </Link>
+                )}
               </li>
               <li>
-                <Link className="nav-links" to="/search">
+                <Link
+                  className="nav-links"
+                  to="/search"
+                  onClick={() => handleSwitchDropDown(false)}
+                >
                   Search
                 </Link>
               </li>
               <li>
-                <Link className="nav-links" to="/">
+                <Link
+                  className="nav-links"
+                  to="/"
+                  onClick={() => handleSwitchDropDown(false)}
+                >
                   Explore
                 </Link>
               </li>
               <li>
-                <Link className="nav-links" to="/favorite">
+                <Link
+                  className="nav-links"
+                  to="/favorite"
+                  onClick={() => handleSwitchDropDown(false)}
+                >
                   Favorites
                 </Link>
               </li>
               <li>
-                <Link className="nav-links" onClick={logout} to={"/"}>
+                <Link
+                  className="nav-links"
+                  to={"/"}
+                  onClick={() => {
+                    logout();
+                    handleSwitchDropDown(true);
+                  }}
+                >
                   Log Out
                 </Link>
               </li>
@@ -67,17 +108,29 @@ function Navbar() {
           ) : (
             <>
               <li>
-                <Link className="nav-links" to="/search">
+                <Link
+                  className="nav-links"
+                  to="/search"
+                  onClick={() => handleSwitchDropDown(false)}
+                >
                   Search
                 </Link>
               </li>
               <li>
-                <Link className="nav-links" to="/register">
+                <Link
+                  className="nav-links"
+                  to="/register"
+                  onClick={() => handleSwitchDropDown(false)}
+                >
                   Register
                 </Link>
               </li>
               <li>
-                <Link className="nav-links" to="/login">
+                <Link
+                  className="nav-links"
+                  to="/login"
+                  onClick={() => handleSwitchDropDown(false)}
+                >
                   Log In
                   {/* <Landing landing={true}/> */}
                 </Link>
@@ -91,26 +144,6 @@ function Navbar() {
           <FaIcons.FaBars onClick={showSidebar} />
         </Link>
       </div> */}
-
-      {/* <nav className={sidebar ? "side-menu-active" : "side-menu"}>
-        <ul className="side-menu-items" onClick={showSidebar}>
-          <li className="side-toggle">
-            <Link to="#" classnName="side-bars">
-              <AiIcons.AiOutlineClose className="close" />
-            </Link>
-          </li>
-          {SidebarItems.map((sideItem, sideIndex) => {
-            return (
-              <li key={sideIndex}>
-                <a className={sideItem.cName} href={sideItem.url}>
-                  {sideItem.icon}
-                  <span>{sideItem.title}</span>
-                </a>
-              </li>
-            );
-          })}
-        </ul>
-      </nav> */}
     </>
   );
 }
