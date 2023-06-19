@@ -2,7 +2,7 @@
 // import { useState, useRef } from "react";
 // import Input from "./Input/Input";
 // import "./Form.css";
-import axios from "axios";
+// import axios from "axios";
 // import { Navigate, useNavigate } from "react-router-dom";
 // import * as MdIcons from "react-icons/md";
 // import { FaListOl } from "react-icons/fa";
@@ -336,8 +336,8 @@ import axios from "axios";
 // }
 
 // export default Form;
-
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Heading,
@@ -359,6 +359,8 @@ function Form() {
   const [url, setUrl] = useState("");
   const [urls, setUrls] = useState([]);
   const [text, setText] = useState("");
+  const [exists, setExists] = useState(false);
+  const [formId, setFormId] = useState("");
 
   const navigate = useNavigate();
 
@@ -376,6 +378,12 @@ function Form() {
   const handleAddUrl = () => {
     setUrls((prevUrls) => [...prevUrls, url]);
     setUrl("");
+  };
+
+  const handleDeleteUrl = (index) => {
+    const list = [...urls];
+    list.splice(index, 1);
+    setUrls(list);
   };
 
   const handleTextChange = (e) => {
@@ -399,39 +407,69 @@ function Form() {
         Authorization: `Bearer ${account}`,
       },
     });
-    var data = JSON.stringify({
-      firstName: user.data.data.firstName,
-      lastName: user.data.data.lastName,
-      //   alternativeName: altNameList,
-      // links: urls,
-      //   resume: resume,
-      //   photo: photo,
-      //   keywords: keywords,
-    });
-    var config = {
-      method: "post",
-      url: "http://localhost:8000/api/profiles",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${account}`,
-      },
-      data: data,
-    };
-
-    axios(config)
-      .then(function (response) {
-        console.log(JSON.stringify(response.data));
-        formUploadHandler(account, response.data.data._id);
-        // if (photo == null) {
-        //   navigate("/Profile");
-        // } else {
-        //   singleFileUploadHandler(account, response.data.data._id);
-        // }
-        // navigate("/profile");
-      })
-      .catch(function (error) {
-        console.log("post listing error: ", error.message);
+    if (exists) {
+      var data = JSON.stringify({
+        links: urls,
+        extraInfo: text,
       });
+      var config = {
+        method: "put",
+        url: `http://localhost:8000/api/forms/${formId}`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${account}`,
+        },
+        data: data,
+      };
+      await axios(config)
+        .then(function (response) {
+          console.log(JSON.stringify(response.data));
+          // formUploadHandler(account, response.data.data._id);
+          // if (photo == null) {
+          //   navigate("/Profile");
+          // } else {
+          singleFileUploadHandler(account, response.data.data._id);
+          // }
+          // navigate("/profile");
+        })
+        .catch(function (error) {
+          console.log("put form error: ", error.message);
+        });
+    } else {
+      var data = JSON.stringify({
+        firstName: user.data.data.firstName,
+        lastName: user.data.data.lastName,
+        //   alternativeName: altNameList,
+        // links: urls,
+        //   resume: resume,
+        //   photo: photo,
+        //   keywords: keywords,
+      });
+      var config = {
+        method: "post",
+        url: "http://localhost:8000/api/profiles",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${account}`,
+        },
+        data: data,
+      };
+
+      axios(config)
+        .then(function (response) {
+          console.log(JSON.stringify(response.data));
+          formUploadHandler(account, response.data.data._id);
+          // if (photo == null) {
+          //   navigate("/Profile");
+          // } else {
+          //   singleFileUploadHandler(account, response.data.data._id);
+          // }
+          // navigate("/profile");
+        })
+        .catch(function (error) {
+          console.log("post listing error: ", error.message);
+        });
+    }
   };
 
   const formUploadHandler = async (account, id) => {
@@ -520,6 +558,36 @@ function Form() {
       });
   };
 
+  useEffect(() => {
+    let defaultData = async () => {
+      try {
+        const account = localStorage.getItem("token");
+        let user = await axios.get("http://localhost:8000/api/auth/me", {
+          headers: {
+            Authorization: `Bearer ${account}`,
+          },
+        });
+
+        const userData = await axios.get("http://localhost:8000/api/forms");
+        const relatedForm = await userData.data.data.filter(
+          (form) => form.user === user.data.data._id
+        );
+        if (relatedForm[0]) {
+          console.log("exists: ", relatedForm[0]);
+          setExists(true);
+          setUrls(relatedForm[0].links);
+          setText(relatedForm[0].extraInfo);
+          setFormId(relatedForm[0]._id);
+        }
+        // setForm(relatedForm[0]._id);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    defaultData();
+  }, []);
+
   return (
     <>
       <div className="form-intro-1">
@@ -573,9 +641,17 @@ function Form() {
             </Flex>
             <List spacing={3} mt="15">
               {urls.map((url, index) => (
-                <ListItem key={index} className="list-item">
-                  • {url}
-                </ListItem>
+                <>
+                  <ListItem key={index} className="list-item">
+                    • {url}
+                    <Button
+                      className="delete-button"
+                      onClick={() => handleDeleteUrl(index)}
+                    >
+                      Delete
+                    </Button>
+                  </ListItem>
+                </>
               ))}
             </List>
             <Flex>
