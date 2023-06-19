@@ -9,7 +9,7 @@ import {
   Col,
 } from "react-bootstrap";
 import { BsSearch } from "react-icons/bs";
-import { AiOutlineStar, AiFillStar } from "react-icons/ai";
+import { AiOutlineStar, AiFillStar, AiOutlineClose } from "react-icons/ai";
 import axios from "axios";
 import "./Search.css";
 
@@ -20,9 +20,9 @@ function Search() {
   const [filterTerm, setFilterTerm] = useState("");
   const [searchPerformed, setSearchPerformed] = useState(false);
   const [filterBoxshown, setFilterBoxshown] = useState(false);
-  // TODO: You may want something like 
-  // const [filteredKeywords, setFilteredKeywords] = useState([]);
-  // to control all the filtered keywords
+  const [filterKeywords, setFilterKeywords] = useState([]);
+  const [initialProfiles, setInitialProfiles] = useState([]);
+
 
   const handleSubscribe = async (profileId) => {
     try {
@@ -79,6 +79,13 @@ function Search() {
           favorited: favoritedProfileIds.has(profile._id),
         }))
       );
+      setInitialProfiles(
+        profilesResponse.data.data.map((profile) => ({
+          ...profile,
+          favorited: favoritedProfileIds.has(profile._id),
+        }))
+      );
+
     } catch (error) {
       console.log(error);
     }
@@ -91,8 +98,27 @@ function Search() {
 
   // apply the filtered keywords to the search results
   const handleApplyFilters = () => {
+    setProfiles(
+      initialProfiles.filter(profile => 
+        filterKeywords.every(filterKeyword =>
+          profile.keywords.map(kw => kw.toLowerCase()).includes(filterKeyword.toLowerCase())
+        )
+      )
+    );
+  };
 
-  }
+  const handleAddFilter = () => {
+    setFilterKeywords([...filterKeywords, filterTerm]);
+    setFilterTerm('');
+  };
+  
+  const handleRemoveFilter = (index) => {
+    const newFilterKeywords = [...filterKeywords];
+    newFilterKeywords.splice(index, 1);
+    setFilterKeywords(newFilterKeywords);
+  };
+
+  
 
   return (
     <div>
@@ -246,7 +272,7 @@ function Search() {
                       maxLength={80}
                       onChange={(event) => setFilterTerm(event.target.value)}
                     />
-                    <Button variant="dark"> Add </Button>
+                    <Button variant="dark" onClick={handleAddFilter}> Add </Button>
                     <Button
                       variant="dark"
                       className="ms-2"
@@ -256,14 +282,30 @@ function Search() {
                       Apply Filters
                     </Button>
                   </div>
-
                   <div className="d-flex flex-wrap mt-3 mb-2">
+                    {/* {filterKeywords.map((keyword, i) => 
+                      <Button className="me-2 mb-2" key={i}> {keyword} </Button>
+                    )} */}
+                    {filterKeywords.map((keyword, i) => (
+                        <Button className="me-2 mb-2" key={i}>
+                            {keyword}
+                            <AiOutlineClose 
+                                size={20}
+                                style={{ marginLeft: "10px", cursor: "pointer" }} 
+                                onClick={() => handleRemoveFilter(i)} 
+                            />
+                        </Button>
+                    ))}
+
+                  </div>
+
+                  {/* <div className="d-flex flex-wrap mt-3 mb-2">
                     <Button className="me-2 mb-2"> Data Science </Button>
                     <Button className="me-2 mb-2"> Neural Networks </Button>
                     <Button className="me-2 mb-2"> Machine Learning </Button>
                     <Button className="me-2 mb-2"> Keyword Extraction </Button>
                     <Button className="me-2 mb-2"> Data Science </Button>
-                  </div>
+                  </div> */}
                 </div>
               </ListGroup.Item>
             ) : (

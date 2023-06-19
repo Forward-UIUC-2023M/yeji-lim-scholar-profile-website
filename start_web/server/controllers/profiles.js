@@ -201,7 +201,7 @@ exports.searchProfiles = asyncHandler(async (req, res, next) => {
     $or: [
       { firstName: { $regex: q, $options: "i" } },
       { lastName: { $regex: q, $options: "i" } },
-      { primaryName: { $regex: q, $options: "i" } },
+      { papers: { $regex: q, $options: "i" } },
       { institution: { $regex: q, $options: "i" } }
     ]
   };
