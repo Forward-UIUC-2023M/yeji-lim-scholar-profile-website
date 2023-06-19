@@ -43,6 +43,7 @@ function Profile() {
   const [photo, setPhoto] = useState("");
   const [profile, setProfile] = useState(defaultProfile); // user's current profile displayed
   const [updatedProfile, setUpdatedProfile] = useState(defaultProfile); // user's updated profile in inline edit or modal form control
+  const [form, setForm] = useState();
 
   const [inlineEditMode, setInlineEditMode] = useState({
     basicInfo: false,
@@ -293,12 +294,19 @@ function Profile() {
         setPhoto(user.data.data.photo);
 
         const { data } = await axios.get("http://localhost:8000/api/profiles");
+        console.log("data: ", data);
         const profile_to_set = await data.data.filter(
           (prof) => prof.user === user.data.data._id
         );
         setProfileId(profile_to_set[0]._id);
         setProfile(profile_to_set[0]);
         setUpdatedProfile(profile_to_set[0]);
+
+        const userData = await axios.get("http://localhost:8000/api/forms");
+        const relatedForm = await userData.data.data.filter(
+          (form) => form.user === user.data.data._id
+        );
+        setForm(relatedForm[0]._id);
       } catch (error) {
         console.log(error);
       }
@@ -327,7 +335,7 @@ function Profile() {
       // delete the form
       var config2 = {
         method: "delete",
-        url: `http://localhost:8000/api/forms/${profileId}`,
+        url: `http://localhost:8000/api/forms/${form}`,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${account}`,
@@ -360,6 +368,9 @@ function Profile() {
   if (profile) {
     return (
       <div className="profile-page-container">
+        <br />
+        <br />
+        <br />
         <div>
           <Modal
             show={modalEditMode.basicInfo}
