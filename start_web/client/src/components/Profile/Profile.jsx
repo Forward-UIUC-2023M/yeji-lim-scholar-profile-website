@@ -40,7 +40,7 @@ function Profile() {
   const saving = useRef(false); // true if user is saving the edition they made
   const [profileId, setProfileId] = useState("");
   const [photo, setPhoto] = useState("");
-  const [profile, setProfile] = useState(); // user's current profile displayed
+  const [profile, setProfile] = useState(defaultProfile); // user's current profile displayed
   const [updatedProfile, setUpdatedProfile] = useState(defaultProfile); // user's updated profile in inline edit or modal form control
 
   const [inlineEditMode, setInlineEditMode] = useState({

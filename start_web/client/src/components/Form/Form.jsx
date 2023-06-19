@@ -355,7 +355,7 @@ import "./Form.css";
 
 function Form() {
   const [file, setFile] = useState(null);
-  const [fileName, setFileName] = useState("No CV selected");
+  const [fileName, setFileName] = useState("No Resume/CV selected");
   const [url, setUrl] = useState("");
   const [urls, setUrls] = useState([]);
   const [text, setText] = useState("");
@@ -364,7 +364,9 @@ function Form() {
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
-    setFileName(e.target.files[0] ? e.target.files[0].name : "No CV selected");
+    setFileName(
+      e.target.files[0] ? e.target.files[0].name : "No Resume/CV selected"
+    );
   };
 
   const handleUrlChange = (e) => {
@@ -401,7 +403,7 @@ function Form() {
       firstName: user.data.data.firstName,
       lastName: user.data.data.lastName,
       //   alternativeName: altNameList,
-      links: urls,
+      // links: urls,
       //   resume: resume,
       //   photo: photo,
       //   keywords: keywords,
@@ -435,6 +437,7 @@ function Form() {
   const formUploadHandler = async (account, id) => {
     var data = JSON.stringify({
       links: urls,
+      extraInfo: text,
     });
     var config = {
       method: "post",

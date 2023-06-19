@@ -40,7 +40,7 @@ function Navbar() {
             <>
               <li>
                 <Link className="nav-links" to="/profile">
-                  Profile
+                  Profile <i className="fas fa-caret-down"></i>
                 </Link>
               </li>
               <li>
