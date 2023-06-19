@@ -32,3 +32,17 @@
     border-color: #edf1ff;
     margin-top: 50px;
 }
+
+.search-listGroup-item-filter {
+    display: flex;
+    flex-direction: column;
+    width: 60vw;
+    background-color: #edf1ff;
+    border-color: #edf1ff;
+    margin-top: 50px;
+}
+
+.filter-container {
+    width: 30vw;
+}
+
