@@ -1,3 +1,11 @@
+.search-page-container {
+    padding-top: 20px;
+    padding-bottom: 80px;
+    background-color: #fff;
+    min-height: 100vh;
+    height: 100%;
+}
+
 .search-container {
     display: flex;
     align-items: center;
@@ -17,11 +25,34 @@
 .search-icon {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
+    background-color: #e6eaff;
 }
 
 .search-bar {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
+    background-color: #e6eaff;
+}
+
+.search-button {
+    padding: 0.3rem 1rem;
+    border: 1px solid #fff;
+    /* background: #0bc1e9; */
+    background-color: #395ef4;
+    color: #fff;
+    /* font-size: 24px; */
+    cursor: pointer;
+    border-radius: 30px;
+}
+
+.ms-2 {
+    padding: 0.3rem 1rem;
+    border: 1px solid #fff;
+    background: #0bc1e9;
+    color: #fff;
+    /* font-size: 24px; */
+    cursor: pointer;
+    border-radius: 30px; 
 }
 
 .search-listGroup-item {
@@ -44,5 +75,30 @@
 
 .filter-container {
     width: 30vw;
+    background-color: #e6eaff;
 }
 
+.filter-add-button {
+    padding: 0.3rem 1rem;
+    border: 1px solid #fff;
+    background: #7d9af2;
+    color: #fff;
+    /* font-size: 24px; */
+    cursor: pointer;
+    border-radius: 30px; 
+}
+
+.keyword-container {
+    background-color: #e2e6f3;
+    padding: 0.3rem 1rem;
+    border: 1px solid #e6eaff;
+    color: black;
+    /* font-size: 24px; */
+    /* cursor: pointer; */
+    border-radius: 30px; 
+}
+
+.keyword-container:hover {
+    background-color: #ed7285;
+    border: 1px solid #e6eaff;
+}

@@ -81,7 +81,7 @@ function Favorite() {
   }, []);
 
   return (
-    <div>
+    <div className="favorite-page-container">
       <ListGroup className="mt-5 align-items-center">
         {favoriteProfiles.map((profile, index) => (
           <ListGroup.Item
