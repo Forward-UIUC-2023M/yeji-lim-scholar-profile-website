@@ -23,16 +23,15 @@ function Search() {
   const [filterKeywords, setFilterKeywords] = useState([]);
   const [initialProfiles, setInitialProfiles] = useState([]);
 
-
   const handleSubscribe = async (profileId) => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
         // Prompt the user to log in.
-        alert('Please log in to favorite profiles.');
+        alert("Please log in to favorite profiles.");
         return;
       }
-  
+
       const response = await axios.post(
         `http://localhost:8000/api/profiles/${profileId}/favorite`,
         {},
@@ -43,7 +42,7 @@ function Search() {
         }
       );
       console.log(response.data);
-  
+
       // Toggle the favorited status of the profile in state
       setProfiles(
         profiles.map((profile) =>
@@ -55,7 +54,7 @@ function Search() {
     } catch (error) {
       console.log(error);
     }
-  };  
+  };
 
   const handleSearch = async (event) => {
     event.preventDefault();
@@ -64,7 +63,7 @@ function Search() {
       const profilesResponse = await axios.get(
         `http://localhost:8000/api/profiles/search?q=${searchTerm}`
       );
-  
+
       let favoritedProfileIds = new Set();
       const token = localStorage.getItem("token");
       if (token) {
@@ -76,12 +75,12 @@ function Search() {
             },
           }
         );
-  
+
         favoritedProfileIds = new Set(
           favoritesResponse.data.data.map((id) => id.toString())
         );
       }
-  
+
       setProfiles(
         profilesResponse.data.data.map((profile) => ({
           ...profile,
@@ -97,7 +96,7 @@ function Search() {
     } catch (error) {
       console.log(error);
     }
-  };  
+  };
 
   // control when filter box is shown
   const handleShowFilterBox = () => {
@@ -107,26 +106,28 @@ function Search() {
   // apply the filtered keywords to the search results
   const handleApplyFilters = () => {
     setProfiles(
-      initialProfiles.filter(profile => 
-        filterKeywords.every(filterKeyword =>
-          profile.keywords.map(kw => kw.toLowerCase()).includes(filterKeyword.toLowerCase())
+      initialProfiles.filter((profile) =>
+        filterKeywords.every((filterKeyword) =>
+          profile.keywords
+            .map((kw) => kw.toLowerCase())
+            .includes(filterKeyword.toLowerCase())
         )
       )
     );
   };
 
   const handleAddFilter = () => {
-    setFilterKeywords([...filterKeywords, filterTerm]);
-    setFilterTerm('');
+    if (filterTerm.trim() !== "") {
+      setFilterKeywords([...filterKeywords, filterTerm]);
+      setFilterTerm("");
+    }
   };
-  
+
   const handleRemoveFilter = (index) => {
     const newFilterKeywords = [...filterKeywords];
     newFilterKeywords.splice(index, 1);
     setFilterKeywords(newFilterKeywords);
   };
-
-  
 
   return (
     <div className="search-page-container">
@@ -152,12 +153,16 @@ function Search() {
                 maxLength={80}
                 onChange={(event) => setSearchTerm(event.target.value)}
               />
-              <Button className="search-button" type="submit" onClick={handleSearch}>
+              <Button
+                className="search-button"
+                type="submit"
+                onClick={handleSearch}
+              >
                 Search
               </Button>
               <Button
                 variant={filterBoxshown ? "danger" : "success"}
-                className="ms-2"
+                className="keywords-button"
                 onClick={handleShowFilterBox}
               >
                 Filter
@@ -281,10 +286,16 @@ function Search() {
                       maxLength={80}
                       onChange={(event) => setFilterTerm(event.target.value)}
                     />
-                    <Button variant="dark" onClick={handleAddFilter} className="filter-add-button"> Add </Button>
                     <Button
                       variant="dark"
-                      className="ms-2"
+                      onClick={handleAddFilter}
+                      className="filter-add-button"
+                    >
+                      Add
+                    </Button>
+                    <Button
+                      variant="dark"
+                      className="keywords-button"
                       style={{ whiteSpace: "nowrap" }}
                       onClick={handleApplyFilters}
                     >
@@ -292,29 +303,18 @@ function Search() {
                     </Button>
                   </div>
                   <div className="d-flex flex-wrap mt-3 mb-2">
-                    {/* {filterKeywords.map((keyword, i) => 
-                      <Button className="me-2 mb-2" key={i}> {keyword} </Button>
-                    )} */}
                     {filterKeywords.map((keyword, i) => (
-                        <Button className="me-2 mb-2 keyword-container" key={i}>
-                            {keyword}
-                            <AiOutlineClose 
-                                size={20}
-                                style={{ marginLeft: "10px", cursor: "pointer" }} 
-                                onClick={() => handleRemoveFilter(i)} 
-                            />
-                        </Button>
+                      <Button className="me-2 mb-2 keyword-container" key={i}>
+                        {keyword}
+                        <AiOutlineClose
+                          size={15}
+                          color="red"
+                          style={{ marginLeft: "10px", cursor: "pointer" }}
+                          onClick={() => handleRemoveFilter(i)}
+                        />
+                      </Button>
                     ))}
-
                   </div>
-
-                  {/* <div className="d-flex flex-wrap mt-3 mb-2">
-                    <Button className="me-2 mb-2"> Data Science </Button>
-                    <Button className="me-2 mb-2"> Neural Networks </Button>
-                    <Button className="me-2 mb-2"> Machine Learning </Button>
-                    <Button className="me-2 mb-2"> Keyword Extraction </Button>
-                    <Button className="me-2 mb-2"> Data Science </Button>
-                  </div> */}
                 </div>
               </ListGroup.Item>
             ) : (

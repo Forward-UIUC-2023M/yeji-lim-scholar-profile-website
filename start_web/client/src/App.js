@@ -8,6 +8,7 @@ import Register from "./components/Register/Register";
 import About from "./components/About/About";
 import Form from "./components/Form/Form";
 import Profile from "./components/Profile/Profile";
+import ProfileExport from "./components/Profile/ProfileExport";
 import Search from "./components/Search/Search";
 import Favorite from "./components/Favorite/Favorite";
 
@@ -23,6 +24,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/form" element={<Form />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/export" element={<ProfileExport />} />
           <Route path="/search" element={<Search />} />
           <Route path="/favorite" element={<Favorite />} />
         </Routes>

@@ -90,18 +90,7 @@ function Favorite() {
           >
             <div className="d-flex justify-content-between">
               <div className="d-flex flex-column">
-                <h5 className="mt-2" style={{ fontWeight: "bold" }}>
-                  {profile.firstName && profile.lastName
-                    ? profile.firstName +
-                      " " +
-                      profile.lastName +
-                      ", " +
-                      profile.institution
-                    : profile.primaryName + ", " + profile.institution}
-                  &nbsp;
-                </h5>
-
-                {/* <div className="d-flex">
+                <div className="d-flex">
                   <h6 className="mt-3" style={{ fontWeight: "bold" }}>
                     {profile.firstName + " " + profile.lastName + ","}&nbsp;
                   </h6>
@@ -109,25 +98,6 @@ function Favorite() {
                   <h6 className="mt-3" style={{ fontWeight: "bold" }}>
                     {profile.institution}
                   </h6>
-                </div> */}
-
-                <div className="d-flex">
-                  <h6 className="text-warning">Links:&nbsp;</h6>
-
-                  {/* display only first 5 links */}
-                  {profile.links
-                    .slice(0, MAX_LENGTH)
-                    .map((link, link_index) => {
-                      if (
-                        link_index ===
-                        Math.min(profile.links.length - 1, MAX_LENGTH - 1)
-                      ) {
-                        return <h6 key={link_index}>{link}</h6>;
-                      } else {
-                        return <h6 key={link_index}>{link + ","}&nbsp;</h6>;
-                      }
-                    })}
-                  {profile.links.length > MAX_LENGTH && <h6>...</h6>}
                 </div>
 
                 <div className="d-flex">
@@ -149,6 +119,25 @@ function Favorite() {
                       }
                     })}
                   {profile.keywords.length > MAX_LENGTH && <h6>...</h6>}
+                </div>
+
+                <div className="d-flex">
+                  <h6 className="text-warning">Publications:&nbsp;</h6>
+
+                  {/* display only first 5 links */}
+                  {profile.papers
+                    .slice(0, MAX_LENGTH)
+                    .map((paper, paper_index) => {
+                      if (
+                        paper_index ===
+                        Math.min(profile.papers.length - 1, MAX_LENGTH - 1)
+                      ) {
+                        return <h6 key={paper_index}>{paper}</h6>;
+                      } else {
+                        return <h6 key={paper_index}>{paper + ","}&nbsp;</h6>;
+                      }
+                    })}
+                  {profile.papers.length > MAX_LENGTH && <h6>...</h6>}
                 </div>
               </div>
 

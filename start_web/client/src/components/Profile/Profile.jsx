@@ -37,7 +37,11 @@ function Profile() {
 
   const navigate = useNavigate();
   const location = useLocation();
-  let shouldDelete = location.state || false;
+  console.log(location.state);
+  let shouldDelete =
+    (location.state !== null && location.state["shouldDelete"]) || false;
+  let shouldExport =
+    (location.state !== null && location.state["shouldExport"]) || false;
 
   const [profileId, setProfileId] = useState("");
   const [photo, setPhoto] = useState("");
@@ -313,6 +317,15 @@ function Profile() {
 
     defaultData();
   }, []);
+
+  // delete the profile if user perform the action
+  useEffect(() => {
+    if (shouldExport) {
+      shouldExport = false;
+
+      navigate("/profile/export", { state: profile });
+    }
+  }, [shouldExport]);
 
   // delete the profile if user perform the action
   useEffect(() => {
@@ -1501,9 +1514,9 @@ function Profile() {
     return (
       <div className="no-profile-container">
         <h1>A Profile Has Not Been Made</h1>
-        <button className="go-to-form-button" onClick={handleCreateProfile}>
+        <Button className="go-to-form-button" onClick={handleCreateProfile}>
           Make Your First Profile!
-        </button>
+        </Button>
       </div>
     );
   }

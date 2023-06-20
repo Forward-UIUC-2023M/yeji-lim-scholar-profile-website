@@ -17,11 +17,14 @@ function Navbar() {
   const logout = () => {
     localStorage.clear();
     navigate("/", { state: { loggedOut: true } });
-    // navigate("/");
   };
 
   const handleSwitchDropDown = (state) => {
     setShouldDropdown(state);
+  };
+
+  const handleExportProfile = () => {
+    navigate("/profile", { state: { shouldExport: true } });
   };
 
   // delete the user profile by passing the variable to Profile.jsx
@@ -46,6 +49,15 @@ function Navbar() {
                   <NavDropdown title="Profile" className="nav-links">
                     <NavDropdown.Item href="/form">
                       Resubmit Form
+                    </NavDropdown.Item>
+                    <NavDropdown.Item
+                      href="#"
+                      onClick={() => {
+                        handleExportProfile();
+                        handleSwitchDropDown(false);
+                      }}
+                    >
+                      Export Profile
                     </NavDropdown.Item>
                     <NavDropdown.Item
                       href="#"
