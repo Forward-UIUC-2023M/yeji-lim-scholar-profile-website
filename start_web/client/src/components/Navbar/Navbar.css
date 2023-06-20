@@ -4,7 +4,7 @@
   /* background: linear-gradient(90deg, rgb(56,191,196) 0%, rgba(73, 63, 252, 1) 100%); */
   /* background: rgb(190, 178, 167); */
   background-color: #395ef4;
-  height: 80px;
+  height: 70px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -17,7 +17,7 @@
   justify-self: start;
   margin-left: 20px;
   margin-left: 0.5rem;
-  font-size: 50px;
+  font-size: 40px;
   text-decoration: none;
   cursor: pointer;
   align-items: center;
@@ -39,6 +39,7 @@
   width: 70vw;
   justify-content: end;
   margin-right: 2rem;
+  margin-top: 1rem;
 }
 
 .nav-links {
