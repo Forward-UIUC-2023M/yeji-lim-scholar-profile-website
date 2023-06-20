@@ -65,7 +65,16 @@ function Landing() {
               Click here
             </button>
           </Link>
-          <span className="create-account">to get started!</span>
+          <span className="create-account">to build your profile!</span>
+          <div className="landing-login-container">
+            <span className="login">Already have a profile?</span>
+            <Link to="/profile">
+              <button className="login-btn" type=" button">
+                Click here
+              </button>
+            </Link>
+            <span className="login">to view your profile</span>
+          </div>
         </div>
       ) : (
         <div className="landingPage-container">
