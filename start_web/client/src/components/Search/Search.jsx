@@ -129,7 +129,7 @@ function Search() {
   
 
   return (
-    <div>
+    <div className="search-page-container">
       <Container
         className={
           searchPerformed
@@ -152,7 +152,7 @@ function Search() {
                 maxLength={80}
                 onChange={(event) => setSearchTerm(event.target.value)}
               />
-              <Button type="submit" onClick={handleSearch}>
+              <Button className="search-button" type="submit" onClick={handleSearch}>
                 Search
               </Button>
               <Button
@@ -281,7 +281,7 @@ function Search() {
                       maxLength={80}
                       onChange={(event) => setFilterTerm(event.target.value)}
                     />
-                    <Button variant="dark" onClick={handleAddFilter}> Add </Button>
+                    <Button variant="dark" onClick={handleAddFilter} className="filter-add-button"> Add </Button>
                     <Button
                       variant="dark"
                       className="ms-2"
@@ -296,7 +296,7 @@ function Search() {
                       <Button className="me-2 mb-2" key={i}> {keyword} </Button>
                     )} */}
                     {filterKeywords.map((keyword, i) => (
-                        <Button className="me-2 mb-2" key={i}>
+                        <Button className="me-2 mb-2 keyword-container" key={i}>
                             {keyword}
                             <AiOutlineClose 
                                 size={20}
