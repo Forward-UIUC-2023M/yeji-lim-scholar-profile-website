@@ -314,3 +314,37 @@ textarea {
   /* transform: rotate(1px); */
   cursor: pointer;
 }
+
+.export-page-container {
+  padding-top: 20px;
+  padding-bottom: 80px;
+  background-color: #fff;
+  min-height: 100vh;
+  height: 100%;
+}
+
+.export-button {
+  padding: 0.2rem 2.5rem;
+  border: 1px solid #fff;
+  background: #0bc1e9;
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+  border-radius: 30px;
+  height: auto;
+}
+
+.pdf-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  margin: 0% 5% 2% 5%;
+  padding: 50px 50px 50px 80px;
+  border-radius: 35px;
+  background-color: #e6eaff;
+}
+
+.pdf-viewer {
+  width: 100vw;
+  height: 100vh;
+}
