@@ -11,7 +11,9 @@ function Favorite() {
 
   const handleSubscribe = async (profileId, index) => {
     try {
-      const token = localStorage.getItem("token");
+      // const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
+
       const response = await axios.post(
         `http://localhost:8000/api/profiles/${profileId}/favorite`,
         {},
@@ -35,7 +37,9 @@ function Favorite() {
 
   const handleShowFavorites = async () => {
     try {
-      const token = localStorage.getItem("token");
+      // const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
+
       const favoritesResponse = await axios.get(
         "http://localhost:8000/api/profiles/favorited",
         {

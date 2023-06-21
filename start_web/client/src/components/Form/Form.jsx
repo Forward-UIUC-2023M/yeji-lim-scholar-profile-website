@@ -401,7 +401,9 @@ function Form() {
     // e.preventDefault();
     // console.log("submitted", formData);
     e.preventDefault();
-    const account = localStorage.getItem("token");
+    // const account = localStorage.getItem("token");
+    const account = sessionStorage.getItem("token");
+
     let user = await axios.get("http://localhost:8000/api/auth/me", {
       headers: {
         Authorization: `Bearer ${account}`,
@@ -561,7 +563,9 @@ function Form() {
   useEffect(() => {
     let defaultData = async () => {
       try {
-        const account = localStorage.getItem("token");
+        // const account = localStorage.getItem("token");
+        const account = sessionStorage.getItem("token");
+
         let user = await axios.get("http://localhost:8000/api/auth/me", {
           headers: {
             Authorization: `Bearer ${account}`,
