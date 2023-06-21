@@ -9,13 +9,16 @@ import "./Navbar.css";
 
 function Navbar() {
   const navigate = useNavigate();
-  const auth = localStorage.getItem("token");
+  // const auth = localStorage.getItem("token");
+  const auth = sessionStorage.getItem("token");
+
   const [sidebar, setSidebar] = useState(false);
   const [shouldDropdown, setShouldDropdown] = useState(false);
   const showSidebar = () => setSidebar(!sidebar);
 
   const logout = () => {
-    localStorage.clear();
+    // localStorage.clear();
+    sessionStorage.clear();
     navigate("/", { state: { loggedOut: true } });
   };
 

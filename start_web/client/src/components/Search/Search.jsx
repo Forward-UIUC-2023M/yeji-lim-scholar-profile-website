@@ -25,7 +25,8 @@ function Search() {
 
   const handleSubscribe = async (profileId) => {
     try {
-      const token = localStorage.getItem("token");
+      // const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       if (!token) {
         // Prompt the user to log in.
         alert("Please log in to favorite profiles.");
@@ -65,7 +66,9 @@ function Search() {
       );
 
       let favoritedProfileIds = new Set();
-      const token = localStorage.getItem("token");
+      // const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
+
       if (token) {
         const favoritesResponse = await axios.get(
           "http://localhost:8000/api/profiles/favorited",

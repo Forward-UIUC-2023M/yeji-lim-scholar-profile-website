@@ -91,7 +91,8 @@ function Register() {
 
     axios(config)
       .then(function (response) {
-        localStorage.setItem("token", response.data.token);
+        // localStorage.setItem("token", response.data.token);
+        sessionStorage.setItem("token", response.data.token);
         // navigate("/");
         if (photo == null) {
           navigate("/Profile");

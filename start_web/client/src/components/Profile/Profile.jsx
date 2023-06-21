@@ -249,7 +249,9 @@ function Profile() {
   };
 
   const updateBackend = async (currProfile) => {
-    const account = localStorage.getItem("token");
+    // const account = localStorage.getItem("token");
+    const account = sessionStorage.getItem("token");
+
 
     var data = JSON.stringify({
       firstName: currProfile.firstName,
@@ -289,7 +291,9 @@ function Profile() {
     let defaultData = async () => {
       try {
         // const account = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0N2NjZWM4MmUwY2Y4Y2M0MDVlMmFhNiIsImlhdCI6MTY4NTkxMTU3OSwiZXhwIjoxNjg4NTAzNTc5fQ.iJg27Jre1t-x5Ii7730bVr_ySvtPB8CWGMJ-exV1NWQ";
-        const account = localStorage.getItem("token");
+        // const account = localStorage.getItem("token");
+        const account = sessionStorage.getItem("token");
+
         let user = await axios.get("http://localhost:8000/api/auth/me", {
           headers: {
             Authorization: `Bearer ${account}`,
@@ -332,7 +336,9 @@ function Profile() {
     if (shouldDelete) {
       shouldDelete = false;
 
-      const account = localStorage.getItem("token");
+      // const account = localStorage.getItem("token");
+      const account = sessionStorage.getItem("token");
+
 
       // delete the profile
       var config1 = {

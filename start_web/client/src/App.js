@@ -2,7 +2,7 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
-import Landing from "./components/Landing/Landing"
+import Landing from "./components/Landing/Landing";
 import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
 import About from "./components/About/About";
@@ -13,6 +13,19 @@ import Search from "./components/Search/Search";
 import Favorite from "./components/Favorite/Favorite";
 
 function App() {
+  // window.onbeforeunload = () => {
+  //   localStorage.clear();
+  // };
+  const clearStorage = () => {
+    let session = sessionStorage.getItem("token");
+    console.log("session: ", session);
+    if (session == null)
+      localStorage.removeItem("token");
+    else  
+      sessionStorage.setItem("token", session);
+  }
+  window.addEventListener("load", clearStorage);
+
   return (
     <>
       <Router>

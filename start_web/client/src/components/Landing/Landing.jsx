@@ -5,7 +5,8 @@ import "./Landing.css";
 function Landing() {
   // window.location.reload(false);
   const location = useLocation();
-  const auth = localStorage.getItem("token");
+  // const auth = localStorage.getItem("token");
+  const auth = sessionStorage.getItem("token");
   console.log("auth: ", auth);
   // let loggedOut = location.state || false;
   // if (auth) {
