@@ -361,6 +361,8 @@ function Form() {
   const [text, setText] = useState("");
   const [exists, setExists] = useState(false);
   const [formId, setFormId] = useState("");
+  const [suggestedUrls, setSuggestedUrls] = useState([]);
+
 
   const navigate = useNavigate();
 
@@ -386,6 +388,12 @@ function Form() {
     setUrls(list);
   };
 
+  const handleDeleteSugUrl = (index) => {
+    const list = [...suggestedUrls];
+    list.splice(index, 1);
+    setSuggestedUrls(list);
+  };
+
   const handleTextChange = (e) => {
     setText(e.target.value);
   };
@@ -398,17 +406,15 @@ function Form() {
   //   };
 
   let handleSubmit = async (e) => {
-    // e.preventDefault();
-    // console.log("submitted", formData);
     e.preventDefault();
-    // const account = localStorage.getItem("token");
     const account = sessionStorage.getItem("token");
-
+  
     let user = await axios.get("http://localhost:8000/api/auth/me", {
       headers: {
         Authorization: `Bearer ${account}`,
       },
     });
+  
     if (exists) {
       var data = JSON.stringify({
         links: urls,
@@ -424,28 +430,44 @@ function Form() {
         data: data,
       };
       await axios(config)
-        .then(function (response) {
+      .then(async function (response) {
           console.log(JSON.stringify(response.data));
-          // formUploadHandler(account, response.data.data._id);
-          // if (photo == null) {
-          //   navigate("/Profile");
-          // } else {
-          singleFileUploadHandler(account, response.data.data._id);
-          // }
-          // navigate("/profile");
-        })
-        .catch(function (error) {
+          
+          await singleFileUploadHandler(account, response.data.data._id);
+
+          // Combine urls and suggestedUrls into one array
+          let allUrls = [...urls, ...suggestedUrls];
+
+          // send URL array to Flask server
+          var urlsData = {
+              urls: allUrls,
+          };
+
+          var configFlask = {
+              method: "post",
+              url: "http://localhost:5000/url_search",
+              headers: {
+                  "Content-Type": "application/json",
+              },
+              data: urlsData,
+          };
+
+          await axios(configFlask)
+          .then(function (response) {
+              console.log(response.data);
+          })
+          .catch(function (error) {
+              console.log("flask error: ", error.message);
+          });
+      })
+      .catch(function (error) {
           console.log("put form error: ", error.message);
-        });
+      });
+
     } else {
       var data = JSON.stringify({
         firstName: user.data.data.firstName,
         lastName: user.data.data.lastName,
-        //   alternativeName: altNameList,
-        // links: urls,
-        //   resume: resume,
-        //   photo: photo,
-        //   keywords: keywords,
       });
       var config = {
         method: "post",
@@ -456,23 +478,44 @@ function Form() {
         },
         data: data,
       };
-
+  
       axios(config)
         .then(function (response) {
           console.log(JSON.stringify(response.data));
           formUploadHandler(account, response.data.data._id);
-          // if (photo == null) {
-          //   navigate("/Profile");
-          // } else {
-          //   singleFileUploadHandler(account, response.data.data._id);
-          // }
-          // navigate("/profile");
         })
         .catch(function (error) {
           console.log("post listing error: ", error.message);
         });
     }
   };
+
+  const handleFind = async () => {
+    const account = sessionStorage.getItem("token");
+
+    let user = await axios.get("http://localhost:8000/api/auth/me", {
+      headers: {
+        Authorization: `Bearer ${account}`,
+      },
+    });
+
+    // Fetch scholar URLs for the user's full name
+    let scholarData = JSON.stringify({
+        name: `${user.data.data.firstName} ${user.data.data.lastName}`,
+    });
+    var scholarConfig = {
+        method: "post",
+        url: "http://localhost:5000/scholar_search",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: scholarData,
+    };
+    let scholarResponse = await axios(scholarConfig);
+    let scholarUrls = scholarResponse.data; 
+    setSuggestedUrls(scholarUrls);
+  };
+
 
   const formUploadHandler = async (account, id) => {
     var data = JSON.stringify({
@@ -592,6 +635,15 @@ function Form() {
     defaultData();
   }, []);
 
+  // useEffect(() => {
+  //   setSuggestedUrls([
+  //     "http://example.com/1",
+  //     "http://example.com/2",
+  //     "http://example.com/3",
+  //   ]);
+  // }, []);
+
+
   return (
     <>
       <div className="form-intro-1">
@@ -611,6 +663,7 @@ function Form() {
         <Flex direction="row" justify="center" align="center" width="100%">
           <Spacer />
           <Box
+            marginX="70"
             width="xl"
             borderWidth="1px"
             borderRadius="15px"
@@ -671,6 +724,39 @@ function Form() {
                 Generate Profile
               </Button>
             </Flex>
+          </Box>
+          {/* <Spacer /> */}
+          <Box
+            width="xl"
+            borderWidth="1px"
+            borderRadius="15px"
+            padding="30"
+            backgroundColor="#fff"
+          >
+            <Heading className="suggest-header" marginBottom="20">
+              <Button className="add-button" marginRight="10" marginBottom="5" onClick={handleFind}>
+                  Find
+              </Button>
+              Suggested URLs
+            </Heading>
+            <List spacing={3} mt="15">
+              {suggestedUrls.map((url, index) => (
+                <ListItem key={index} className="list-item">
+                  • {url}
+                  <Button
+                      className="delete-button"
+                      onClick={() => handleDeleteSugUrl(index)}
+                    >
+                      Delete
+                    </Button>
+                </ListItem>
+              ))}
+            </List>
+            {/* <Flex justifyContent="center" marginTop="30">
+              <Button className="generate-button" onClick={handleSubmit}>
+                Confirm
+              </Button>
+            </Flex> */}
           </Box>
           <Spacer />
         </Flex>
